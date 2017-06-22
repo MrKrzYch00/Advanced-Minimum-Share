@@ -1,0 +1,14 @@
+This is an old Visual Basic script I wrote when I was 15 years old.
+
+It was run in Direct Connect Hub's scripting engine.
+
+It provided such functionality as:
+- GUI as separate program Tab,
+- Minimum share settings that could be enforced by current day time or server load (users online),
+- a lot of other stuff I can't remember anymore.
+
+================
+DISCLAIMER
+================
+
+The code is provided as-is. The author in not responsible for any damage that may arise by using script provided. This reperesents a proof of concept and should be used only for educational means.

@@ -1,0 +1,2445 @@
+'Advanced Minimum Share v5.71 BETA by Mr_KrzYch00
+
+Dim sT,aCom,sCom,zsd,zds,txtIUInterval,chkInvisibleUsers,txtInvisibleUsers,chkAM,chkPXDE,sPeak,sIsReg,chkMaxShare,txtMaxShare,sldrMaxShare,sImie,sZaImie,sZaNumer,sraz,sNumer,sNumer2,loltemp,wtemp,snow,fraMinShare,sldrOMinShare,txtOMinShare,chkAbout,chkRej,lblTMI,sldrTMI,chkFDT,txtFDT,txtHS,lblADP,txtADP,txtADN,lblRUP,txtRUP,lblOPP,txtOPP,chkVers,lblZmS,txtZmS,lblZmH,txtZmH,txtMsg(5),chkMsg(5),lblV,txtV,chkOpSlots,chkAllHubs,sldrDRK(4),txtR(4),chkAllowInfo,txtInfo,chkDynMinSlots,txtDMSFrom,txtDMSTo,lblMis1,sldrNDMS,sldrRDMS,sldrODMS,lblSlash1,lblSlash3,chkDynMaxHubs,txtDMHFrom,sldrNDMH,sldrRDMH,sldrODMH,txtDMHTo,lblMis2,sldrDMH,lblSlash2,lblSlash4,chkTREnableDynShare,txtTRDS(3),sldrTRDynShare,chkTNEnableDynShare,txtTNU(3),txtTRU(3),txtTNDS(3),sldrTNDynShare,chkREnableDynShare,txtR1DynShareFrom,txtR1DynShareTo,txtR1DynShare,sldrRDynShare,lblRmys,lblRrp,lblR2mys,lblR2rp,txtR2DynShareFrom,txtR2DynShareTo,txtR2DynShare,chkNEnableDynShare,txtN1DynShareFrom,txtN1DynShareTo,txtN1DynShare,sldrNDynShare,lblNmys,lblNrp,lblN2mys,lblN2rp,txtN2DynShareFrom,txtN2DynShareTo,txtN2DynShare,lblMaxHubs,lblMaxHubs2,lblMaxHubs3,sldrNMaxHubs,sldrRMaxHubs,sldrOMaxHubs,lblSperH,lblRSperH,lblOSperH,txtNSperH,txtRSperH,txtOSperH,lblNMinShare,txtNMinShare,sldrNMinShare,txtRMinShare,sldrRMinShare,lblMinSlots3,sldrOPMinSlots,lblMinSlots2,sldrRegMinSlots,lblMinUpload,txtMinUpload,lblMinSlots,sldrNormalMinSlots,iMinSharedBytes,txtBN,sBotName,sIniFile,iDCPPMinSlotsPerHub,DisUser,DisUser2,sTime
+
+Sub Main()
+sIniFile="C:\AMS.ini"
+HubModifications
+LoadSettings
+sBotName=txtBN.Text
+tmrScriptTimer.Interval=100
+tmrScriptTimer.Enabled=1
+snow=0
+wtemp=0
+CheckIfRegStart
+End Sub
+
+Sub HubModifications()
+Dim sToper
+With frmHub.lstSelector
+.ListItems.Add,"AMS","AMS v5.71 BETA"
+.ListItems("AMS").ToolTipText="Advanced Minimum Share v5.71 BETA by Mr_KrzYch00 script plugin"
+.ListItems(1).ToolTipText="Tutaj ustawiasz adres przekierowania, IP, nazwe, opis i port huba"
+.ListItems(2).ToolTipText="Tutaj mozesz podgladnac kto jest polaczony z hubem i jaki jest jego IP"
+.ListItems(3).ToolTipText="Tutaj mozesz dodac OPa lub zarejestrowac uzytkownika"
+.ListItems(4).ToolTipText="Tutaj wpisujesz wiadomosc powitalna lub wysylasz do wszystkich jakis tekst"
+.ListItems(5).ToolTipText="Tutaj ujrzysz cala statystyke huba - kto dostal kicka etc"
+.ListItems(6).ToolTipText="W tym miejscu mozesz napisac wlasnego skrypta - znajomosc Visual Basic 6.0"
+.ListItems(7).ToolTipText="Tutaj znajdziesz opcje dotyczace multi-hub searchingu - buggy"
+.ListItems(8).ToolTipText="Tu jest miejsce dla tych, ktorzy chca zmniejszyc lagi i/lub zwolnic troche proca"
+End With
+With frmHub
+.chkAutoRedirect.ToolTipText="Automatycznie przekierowuje laczacych sie uzytkownikow"
+.chkAutoReg.ToolTipText="Hub bedzie automatycznie rejestrowany"
+.chkAutoStart.ToolTipText="Hub bedzie automatycznie rozpoczynal serwowanie przy kazdym jego ponownym uruchomieniu"
+.chkDoNotSendChatMessagesToAFKUsers.ToolTipText="Nie przesyla chata do userow bedacych w trybie away"
+.chkFloodProtection.ToolTipText="Zabezpieczenie przed floodem - niestety troche prymitywne :P"
+.chkOnlyRegedNicks.ToolTipText="Na huba beda mogli wejsc tylko zarejestrowani uzytkownicy i OPy"
+.chkPrivateOnJoin.ToolTipText="Wysyla wiadomosc powitalna jako priv - efekt tylko dla NM-DC, dla DC++ tylko wtedy, gdy istnieje (w liscie userow) bot od ktorego jest wysylana wiadomosc"
+.chkRedirectIfFull.ToolTipText="Automatycznie przekierowuje laczacych sie uzytkownikow gdy hub jest pelen"
+.chkRunScripts.ToolTipText="Wlacza wykonywanie skryptow"
+.chkWriteLog.ToolTipText="Zapisuje pliki logowania - dunno if this works"
+.cmdAddOp.ToolTipText="Dodaje zarejestrowanego uzytkownika lub OPeratora"
+.cmdAddPermBan.ToolTipText="Dodaje permanentnego bana na dany IP"
+.cmdMassMsg.ToolTipText="Przesyla priva do wszystkich userow na hubie - na privie tylko dla NM-DC, dla DC++ tylko wtedy, gdy istnieje (w liscie userow) bot od ktorego jest wysylana wiadomosc"
+.cmdReDirect.ToolTipText="Przekierowuje wszystkich polaczonych uzytkownikow"
+.cmdStartServing.ToolTipText="Rozpoczyna serwowanie huba"
+.lblCurrentUsers.ToolTipText="Ilosc uzytkownikow na hubie w danym momencie"
+.lblOperators.ToolTipText="Ilosc OPeratorow na hubie w danym momencie"
+.lblPeakUsers.ToolTipText="Maksymalna ilosc uzytkownikow, jaka pojawila sie na kanale"
+.lstClients.ToolTipText="Lista klientow"
+.lstPermBan.ToolTipText="Lista IP permanentnie zabanowanych [kliknij 2x aby usunac]"
+.lstTempBan.ToolTipText="Lista IP tymczasowo zabanowanych (ok 15 min) [kliknij 2x aby usunac]"
+.sldrMaxUsers.ToolTipText="Maksymalna ilosc uzytkownikow na hubie. UWAGA! Wiekszy numerek powoduje drastyczne zmniejszenie sie zasobow systemowych na Win 9x/ME"
+.txtBotPass.ToolTipText="Haslo dla bota 'z zewnatrz' (np.: programowego lub multi-hub chata etc.)"
+.txtDescription.ToolTipText="Opis twojego huba - bedzie widnial na Public Hub List"
+.txtIP.ToolTipText="Adres IP twojego huba (moze byc podany jako DNS, a takze jako No-IP DNS np.: mojhub.hopto.org)"
+.txtListenPort.ToolTipText="Port pod ktorym hub bedzie akceptowal polaczenia, domyslnie=411"
+.txtMinClientVersion.ToolTipText="Minimalna wersja klienta wymagana na hubie"
+.txtName.ToolTipText="Nazwa twojego huba"
+.txtRedirect.ToolTipText="Adres przekierowania - tylko gdy hub jest pelen; AMS ma swoje ustawienia do innych funkcji"
+End With
+
+Set fraMinShare=frmHub.Controls.Add("VB.Frame","MinShare")
+Set sT=frmHub.fraNetworkSetup
+With fraMinShare
+.Caption="Advanced Minimum Share v5.71 BETA by Mr_KrzYch00"
+.Left=sT.Left
+.Top=sT.Top
+.Width=sT.Width
+.Height=sT.Height
+.Visible=1
+End With
+
+Set txtBN=frmHub.Controls.Add("VB.TextBox","txtBN",fraMinShare)
+With txtBN
+.Height=235
+.Left=120
+.Top=200
+.Width=1575
+.Visible=1
+.Text="Info2"
+.ToolTipText="Nazwa bota jakiej bedzie uzywal skrypt do komunikowania sie z userem"
+End With
+
+Set lblNMinShare=frmHub.Controls.Add("VB.Label","lblNMinShare",fraMinShare)
+With lblNMinShare
+.Caption="MinShare [N/R/O]:"
+.Height=255
+.Left=1765
+.Top=230
+.Width=2000
+.Visible=1
+.ToolTipText="Minimum share"
+End With
+
+Set txtNMinShare=frmHub.Controls.Add("VB.TextBox","txtNMinShare",fraMinShare)
+With txtNMinShare
+.Height=285
+.Left=3160
+.Top=200
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Minimum share dla normalnych uzytkownikow - wartosci liczbowe"
+End With
+
+Set sldrNMinShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrNMinShare",fraMinShare)
+With sldrNMinShare
+.Height=375
+.Left=3560
+.Top=170
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimum share dla normalnych uzytkownikow - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+  
+Set txtRMinShare=frmHub.Controls.Add("VB.TextBox","txtRMinShare",fraMinShare)
+With txtRMinShare
+.Height=285
+.Left=4460
+.Top=200
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Minimum share dla zarejestrowanych uzytkownikow - wartosci liczbowe"
+End With
+
+Set sldrRMinShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrRMinShare",fraMinShare)
+With sldrRMinShare
+.Height=375
+.Left=4860
+.Top=170
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimum share dla zarejestrowanych uzytkownikow - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set txtOMinShare=frmHub.Controls.Add("VB.TextBox","txtOMinShare",fraMinShare)
+With txtOMinShare
+.Height=285
+.Left=5760
+.Top=200
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Minimum share dla OPeratorow - wartosci liczbowe"
+End With
+
+Set sldrOMinShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrOMinShare",fraMinShare)
+With sldrOMinShare
+.Height=375
+.Left=6160
+.Top=170
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimum share dla OPeratorow - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set chkMaxShare=frmHub.Controls.Add("VB.CheckBox","chkMaxShare",fraMinShare)
+With chkMaxShare
+.Caption="Max. Share[all]:"
+.Height=255
+.Left=7020
+.Top=210
+.Width=1400
+.Visible=1
+.ToolTipText="Maksymalna, dozwolona ilosc share"
+End With
+
+Set txtMaxShare=frmHub.Controls.Add("VB.TextBox","txtMaxShare",fraMinShare)
+With txtMaxShare
+.Height=285
+.Left=8420
+.Top=200
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Maksymalna, dozwolona ilosc share dla wszystkich - wartosci liczbowe"
+End With
+
+Set sldrMaxShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrMaxShare",fraMinShare)
+With sldrMaxShare
+.Height=375
+.Left=8820
+.Top=170
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Maksymalna, dozwolona ilosc share dla wszystkich - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set lblMinSlots = frmHub.Controls.Add("VB.Label","lblMinSlots",fraMinShare)
+With lblMinSlots
+.Caption="MinSlots [N/R/O]:"
+.Height=255
+.Left=120
+.Top=550
+.Width=2395
+.Visible=1
+.ToolTipText="Minimalna ilosc slotow"
+End With
+
+Set sldrNormalMinSlots=frmHub.Controls.Add("MSComctlLib.Slider","sldrNormalMinSlots",fraMinShare)
+With sldrNormalMinSlots
+.Height=375
+.Left=1430
+.Top=480
+.Width=1710
+.Max=20
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimalna ilosc slotow dla normlanych uzytkownikow - od 1 do 20"
+End With
+
+Set lblMinSlots2=frmHub.Controls.Add("VB.Label","lblMinSlots2",fraMinShare)
+With lblMinSlots2
+.Caption="/"
+.Height=255
+.Left=3210
+.Top=540
+.Width=200
+.Visible=1
+End With
+
+Set sldrRegMinSlots = frmHub.Controls.Add("MSComctlLib.Slider","sldrRegMinSlots",fraMinShare)
+With sldrRegMinSlots
+.Height=375
+.Left=3340
+.Top=480
+.Width=1710
+.Max=20
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimalna ilosc slotow dla zarejestrowanych uzytkownikow - od 1 do 20"
+End With
+
+Set lblMinSlots3=frmHub.Controls.Add("VB.Label","lblMinSlots3",fraMinShare)
+With lblMinSlots3
+.Caption="/"
+.Height=255
+.Left=5130
+.Top=540
+.Width=200
+.Visible=1
+End With
+
+Set sldrOPMinSlots=frmHub.Controls.Add("MSComctlLib.Slider","sldrOPMinSlots",fraMinShare)
+With sldrOPMinSlots
+.Height=375
+.Left=5250
+.Top=480
+.Width=1710
+.Max=20
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimalna ilosc slotow dla OPeratorow - od 1 do 20"
+End With
+
+Set lblSperH=frmHub.Controls.Add("VB.Label","lblSperH",fraMinShare)
+With lblSperH
+.Caption="Slots/hub[N/R/O]:"
+.Height=255
+.Left=7020
+.Top=540
+.Width=1495
+.Visible=1
+.ToolTipText="Minimalna ilosc slotow na huba"
+End With
+
+Set txtNSperH=frmHub.Controls.Add("VB.TextBox","txtNSperH",fraMinShare)
+With txtNSperH
+.Height=285
+.Left=8380
+.Top=510
+.Width=330
+.Visible=1
+.text=0
+.ToolTipText="Minimalna ilosc slotow na huba dla normalnych uzytkownikow"
+End With
+
+Set lblRSperH=frmHub.Controls.Add("VB.Label","lblRSperH",fraMinShare)
+With lblRSperH
+.Caption="/"
+.Height=255
+.Left=8710
+.Top=540
+.Width=200
+.Visible=1
+End With
+
+Set txtRSperH=frmHub.Controls.Add("VB.TextBox","txtRSperH",fraMinShare)
+With txtRSperH
+.Height=285
+.Left=8810
+.Top=510
+.Width=330
+.Visible=1
+.text=0
+.ToolTipText="Minimalna ilosc slotow na huba dla zarejestrowanych uzytkownikow"
+End With
+
+Set lblOSperH=frmHub.Controls.Add("VB.Label","lblRSperO",fraMinShare)
+With lblOSperH
+.Caption="/"
+.Height=255
+.Left=9140
+.Top=540
+.Width=200
+.Visible=1
+End With
+
+Set txtOSperH=frmHub.Controls.Add("VB.TextBox","txtOSperH",fraMinShare)
+With txtOSperH
+.Height=285
+.Left=9240
+.Top=510
+.Width=330
+.Visible=1
+.text=0
+.ToolTipText="Minimalna ilosc slotow na huba dla OPeratorow"
+End With
+
+Set lblMaxHubs=frmHub.Controls.Add("VB.Label","lblMaxHubs",fraMinShare)
+With lblMaxHubs
+.Caption="MaxHubs[N/R/O]:"
+.Height=255
+.Left=120
+.Top=850
+.Width=1495
+.Visible=1
+.ToolTipText="Maksymalna, dozwolona ilosc hubow"
+End With
+
+Set lblMaxHubs2=frmHub.Controls.Add("VB.Label","lblMaxHubs2",fraMinShare)
+With lblMaxHubs2
+.Caption="/"
+.Height=255
+.Left=3210
+.Top=850
+.Width=200
+.Visible=1
+End With
+
+Set sldrNMaxHubs=frmHub.Controls.Add("MSComctlLib.Slider","sldrNMaxHubs",fraMinShare)
+With sldrNMaxHubs
+.Height=375
+.Left=1430
+.Top=790
+.Width=1710
+.Max=50
+.TickFrequency=1
+.Visible=1
+.value=50
+.ToolTipText="Maksymalna, dozwolona ilosc hubow dla normalnych uzytkownikow - od 1 do 50"
+End With
+
+Set lblMaxHubs3=frmHub.Controls.Add("VB.Label","lblMaxHubs3",fraMinShare)
+With lblMaxHubs3
+.Caption="/"
+.Height=255
+.Left=5130
+.Top=850
+.Width=200
+.Visible=1
+End With
+
+Set sldrRMaxHubs=frmHub.Controls.Add("MSComctlLib.Slider","sldrRMaxHubs",fraMinShare)
+With sldrRMaxHubs
+.Height=375
+.Left=3340
+.Top=790
+.Width=1710
+.Max=50
+.TickFrequency=1
+.Visible=1
+.value=50
+.ToolTipText="Maksymalna, dozwolona ilosc hubow dla zarejestrowanych uzytkownikow - od 1 do 50"
+End With
+
+Set sldrOMaxHubs=frmHub.Controls.Add("MSComctlLib.Slider","sldrOMaxHubs",fraMinShare)
+With sldrOMaxHubs
+.Height=375
+.Left=5250
+.Top=790
+.Width=1710
+.Max=50
+.TickFrequency=1
+.Visible=1
+.value=50
+.ToolTipText="Maksymalna, dozwolona ilosc hubow dla OPeratorow - od 1 do 50"
+End With
+
+Set lblMinUpload=frmHub.Controls.Add("VB.Label","lblMinUpload",fraMinShare)
+With lblMinUpload
+.Caption="U/L Speed:"
+.Height=255
+.Left=7020
+.Top=860
+.Width=1000
+.Visible=1
+.ToolTipText="Minimalny upload speed limit"
+End With
+
+Set txtMinUpload=frmHub.Controls.Add("VB.TextBox","txtMinUpload",fraMinShare)
+With txtMinUpload
+.Height=285
+.Left=7960
+.Top=830
+.Width=560
+.Visible=1
+.Text=0
+.ToolTipText="Wpisywac tylko wartosci liczbowe! Jest zawsze podawany w KB"
+End With
+
+Set lblV=frmHub.Controls.Add("VB.Label","lblV",fraMinShare)
+With lblV
+.Caption="Ver:"
+.Height=255
+.Left=8600
+.Top=860
+.Width=270
+.Visible=1
+.ToolTipText="Minimalna wersja DC++"
+End With
+
+Set txtV=frmHub.Controls.Add("VB.TextBox","txtV",fraMinShare)
+With txtV
+.Height=285
+.Left=8920
+.Top=830
+.Width=640
+.Visible=1
+.text=0
+.ToolTipText="Pamietaj o konsctrukcji wersji dla DC++: 0.xxx"
+End With
+
+Set lblRUP=frmHub.Controls.Add("VB.Label","lblRUP",fraMinShare)
+With lblRUP
+.Caption="Reg desc. prefix:"
+.Height=255
+.Left=7020
+.Top=1170
+.Width=1200
+.Visible=1
+.ToolTipText="Dopisek od huba do opisu zarejestrowanego uzytkownika. UWAGA! Komenda MyINFOString zostaje zmieniona i wyslana ponownie do wszystkich uzytkownikow! - wiekszy ruch pakietow"
+End With
+
+Set txtRUP=frmHub.Controls.Add("VB.TextBox","txtRUP",fraMinShare)
+With txtRUP
+.Height=255
+.Left=8300
+.Top=1140
+.Width=1280
+.Visible=1
+.text="<REG>%[d]<REG>"
+.ToolTipText="Zmienna %[d] oznacza opis ustawiony przez uzytkownika - np.: Opis: LoL, <Rejestr>%[d]<Reg> w tym tekstboksie powoduje zmiane opisu na: <Rejestr>LoL<Reg>"
+End With
+
+Set lblOPP=frmHub.Controls.Add("VB.Label","lblOPP",fraMinShare)
+With lblOPP
+.Caption="OP descri. prefix:"
+.Height=255
+.Left=7020
+.Top=1490
+.Width=1200
+.Visible=1
+.ToolTipText="Dopisek od huba do opisu OPeratora. UWAGA! Komenda MyINFOString zostaje zmieniona i wyslana ponownie do wszystkich uzytkownikow! - wiekszy ruch pakietow"
+End With
+
+Set txtOPP=frmHub.Controls.Add("VB.TextBox","txtOPP",fraMinShare)
+With txtOPP
+.Height=255
+.Left=8300
+.Top=1460
+.Width=1280
+.Visible=1
+.text="<OP>%[d]<OP>"
+.ToolTipText="Zmienna %[d] oznacza opis ustawiony przez OPeratora - np.: Opis: LoL, <Operator>%[d]<OP> w tym tekstboksie powoduje zmiane opisu na: <Operator>LoL<OP>"
+End With
+
+Set lblADP=frmHub.Controls.Add("VB.Label","lblADP",fraMinShare)
+With lblADP
+.Caption="AdminDP:"
+.Height=255
+.Left=7020
+.Top=1800
+.Width=700
+.Visible=1
+.ToolTipText="Dopisek od huba do opisu ADMINistratora. UWAGA! Komenda MyINFOString zostaje zmieniona i wyslana ponownie do wszystkich uzytkownikow! - wiekszy ruch pakietow"
+End With
+
+Set txtADN=frmHub.Controls.Add("VB.TextBox","txtADN",fraMinShare)
+With txtADN
+.Height=255
+.Left=7770
+.Top=1770
+.Width=900
+.Visible=1
+.text="name?"
+.ToolTipText="W tym miejscu wpisuje sie nick ADMINistratora, np.: Mr_KrzYch00 lub DJ_Marchewka etc."
+End With
+
+Set txtADP=frmHub.Controls.Add("VB.TextBox","txtADP",fraMinShare)
+With txtADP
+.Height=255
+.Left=8670
+.Top=1770
+.Width=900
+.Visible=1
+.text="prefix?"
+.ToolTipText="Zmienna %[d] oznacza opis ustawiony przez AMINIstratora - np.: Opis: LoL, <ADMIN>%[d] w tym tekstboksie powoduje zmiane opisu na: <ADMIN>LoL"
+End With
+
+Set chkOpSlots=frmHub.Controls.Add("VB.CheckBox","chkOpSlots",fraMinShare)
+With chkOpSlots
+.Caption="Rozl. OPow ze slotow i hubow"
+.Height=255
+.Left=7020
+.Top=2100
+.Width=2450
+.Visible=1
+.ToolTipText="Czy skrypt ma brac pod uwage wymagania dot. slotow i hubow dla OPeratorow, Domyslnie=Wyl."
+End With
+
+Set chkPXDE=frmHub.Controls.Add("VB.CheckBox","chkPXDE",fraMinShare)
+With chkPXDE
+.Caption="PtokaX Description Emulation"
+.Height=255
+.Left=7020
+.Top=2410
+.Width=2450
+.Visible=1
+.value=0
+.ToolTipText="Emuluje opis huba PtokiX, czyli na poczatku (TB:xxx) oraz .px. na koncu opisu, gdzie xxx to ilosc TB na hubie"
+End With
+
+Set chkAllowInfo=frmHub.Controls.Add("VB.CheckBox","chkAllowInfo",fraMinShare)
+With chkAllowInfo
+.Caption="Kom. info o wym:"
+.Height=255
+.Left=7020
+.Top=2760
+.Width=1500
+.Visible=1
+.value=1
+.ToolTipText="Komanda, po wpisaniu ktorej skrypt poinformuje uzytkownika o wymaganiach na hubie przeznaczonych dla niego"
+End With
+
+Set txtInfo=frmHub.Controls.Add("VB.TextBox","txtInfo",fraMinShare)
+With txtInfo
+.Height=285
+.Left=8520
+.Top=2730
+.Width=1050
+.Visible=1
+.text="+shareinfo"
+End With
+
+Set chkAM=frmHub.Controls.Add("VB.CheckBox","chkAM",fraMinShare)
+With chkAM
+.Caption="Anty mldc i hubdestroyer v1.01"
+.Height=255
+.Left=7020
+.Top=3080
+.Width=2500
+.Visible=1
+.value=0
+.ToolTipText="Zabezpiecza przed atakami Hubdestroyerem i wyrzuca osly"
+End With
+
+Set chkNEnableDynShare=frmHub.Controls.Add("VB.CheckBox","chkNEnableDynShare",fraMinShare)
+With chkNEnableDynShare
+.Caption="DynMinShareTimeSet (N):"
+.Height=255
+.Left=120
+.Top=1130
+.Width=2185
+.Visible=1
+.ToolTipText="Uruchamia minimum share zalezny od czasu - Dodaje X share do minimum dla normalnych uzytkownikow w okreslonych godzinach (Domyslnie=Wyl.)"
+End With
+
+Set txtN1DynShareFrom=frmHub.Controls.Add("VB.TextBox","txtN1DynShareFrom",fraMinShare)
+With txtN1DynShareFrom
+.Height=285
+.Left=2320
+.Top=1120
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1200
+.ToolTipText="Od ktorej godziny share dla normalnych uzytkownikow ma ulec zmianie (1 ustawienia)"
+End With
+
+Set lblNmis=frmHub.Controls.Add("VB.Label","lblNmis",fraMinShare)
+With lblNmis
+.Caption="-"
+.Height=255
+.Left=2870
+.Top=1150
+.Width=200
+.Visible=1
+End With
+
+Set txtN1DynShareTo=frmHub.Controls.Add("VB.TextBox","txtN1DynShareTo",fraMinShare)
+With txtN1DynShareTo
+.Height=285
+.Left=2950
+.Top=1120
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1300
+.ToolTipText="Do ktorej godziny share dla normalnych uzytkownikow ma byc zmieniony (1 ustawienia)"
+End With
+
+Set lblNrp=frmHub.Controls.Add("VB.Label","lblNrp",fraMinShare)
+With lblNrp
+.Caption="= +"
+.Height=255
+.Left=3500
+.Top=1150
+.Width=400
+.Visible=1
+End With
+
+Set txtN1DynShare=frmHub.Controls.Add("VB.TextBox","txtN1DynShare",fraMinShare)
+With txtN1DynShare
+.Height=285
+.Left=3767
+.Top=1120
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Ile ma byc dodane do minimum share dla normalnych uzytkownikow. Liczba moze byc ujemna (1 ustawienia) - wartosci liczbowe"
+End With
+
+Set txtN2DynShareFrom=frmHub.Controls.Add("VB.TextBox","txtN2DynShareFrom",fraMinShare)
+With txtN2DynShareFrom
+.Height=285
+.Left=4314
+.Top=1120
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1200
+.ToolTipText="Od ktorej godziny share dla normalnych uzytkownikow ma ulec zmianie (2 ustawienia)"
+End With
+
+Set lblN2mys=frmHub.Controls.Add("VB.Label","lblN2mys",fraMinShare)
+With lblN2mys
+.Caption="-"
+.Height=255
+.Left=4864
+.Top=1150
+.Width=500
+.Visible=1
+End With
+
+Set txtN2DynShareTo=frmHub.Controls.Add("VB.TextBox","txtN2DynShareTo",fraMinShare)
+With txtN2DynShareTo
+.Height=285
+.Left=4944
+.Top=1120
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1300
+.ToolTipText="Do ktorej godziny share dla normalnych uzytkownikow ma byc zmieniony (2 ustawienia)"
+End With
+
+Set lblN2rp=frmHub.Controls.Add("VB.Label","lblN2rp",fraMinShare)
+With lblN2rp
+.Caption="= +"
+.Height=255
+.Left=5494
+.Top=1150
+.Width=400
+.Visible=1
+End With
+
+Set txtN2DynShare=frmHub.Controls.Add("VB.TextBox","txtN2DynShare",fraMinShare)
+With txtN2DynShare
+.Height=285
+.Left=5761
+.Top=1120
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Ile ma byc dodane do minimum share dla normalnych uzytkownikow. Liczba moze byc ujemna (2 ustawienia) - wartosci liczbowe"
+End With
+
+Set sldrNDynShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrNDynShare",fraMinShare)
+With sldrNDynShare
+.Height=375
+.Left=6160
+.Top=1090
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Jednostka dla obu ustawien - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set chkREnableDynShare=frmHub.Controls.Add("VB.CheckBox","chkREnableDynShare",fraMinShare)
+With chkREnableDynShare
+.Caption="DynMinShareTimeSet (R):"
+.Height=255
+.Left=120
+.Top=1450
+.Width=2185
+.Visible=1
+.ToolTipText="Uruchamia minimum share zalezny od czasu - dodaje X share do minimum dla zarejestrowanych uzytkownikow w okreslonych godzinach (Domyslnie=Wyl.)"
+End With
+
+Set txtR1DynShareFrom=frmHub.Controls.Add("VB.TextBox","txtR1DynShareFrom",fraMinShare)
+With txtR1DynShareFrom
+.Height=285
+.Left=2320
+.Top=1440
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1200
+.ToolTipText="Od ktorej godziny share dla zarejestrowanych uzytkownikow ma ulec zmianie (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 1 ustawienia)"
+End With
+
+Set lblRmis=frmHub.Controls.Add("VB.Label","lblRmis",fraMinShare)
+With lblRmis
+.Caption="-"
+.Height=255
+.Left=2870
+.Top=1470
+.Width=200
+.Visible=1
+End With
+
+Set txtR1DynShareTo=frmHub.Controls.Add("VB.TextBox","txtR1DynShareTo",fraMinShare)
+With txtR1DynShareTo
+.Height=285
+.Left=2950
+.Top=1440
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1300
+.ToolTipText="Do ktorej godziny share dla zarejestrowanych uzytkownikow ma byc zmieniony (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 1 ustawienia)"
+End With
+
+Set lblRrp=frmHub.Controls.Add("VB.Label","lblRrp",fraMinShare)
+With lblRrp
+.Caption="= +"
+.Height=255
+.Left=3500
+.Top=1470
+.Width=400
+.Visible=1
+End With
+
+Set txtR1DynShare=frmHub.Controls.Add("VB.TextBox","txtR1DynShare",fraMinShare)
+With txtR1DynShare
+.Height=285
+.Left=3767
+.Top=1440
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Ile ma byc dodane do minimum share dla zarejestrowanych uzytkownikow. Liczba moze byc ujemna (1 ustawienia) - wartosci liczbowe"
+End With
+
+Set txtR2DynShareFrom=frmHub.Controls.Add("VB.TextBox","txtR2DynShareFrom",fraMinShare)
+With txtR2DynShareFrom
+.Height=285
+.Left=4314
+.Top=1440
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1200
+.ToolTipText="Od ktorej godziny share dla zarejestrowanych uzytkownikow ma ulec zmianie (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 2 ustawienia)"
+End With
+
+Set lblR2mys=frmHub.Controls.Add("VB.Label","lblR2mys",fraMinShare)
+With lblR2mys
+.Caption="-"
+.Height=255
+.Left=4864
+.Top=1470
+.Width=500
+.Visible=1
+End With
+
+Set txtR2DynShareTo=frmHub.Controls.Add("VB.TextBox","txtR2DynShareTo",fraMinShare)
+With txtR2DynShareTo
+.Height=285
+.Left=4944
+.Top=1440
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1300
+.ToolTipText="Do ktorej godziny share dla zarejestrowanych uzytkownikow ma byc zmieniony (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 2 ustawienia)"
+End With
+
+Set lblR2rp=frmHub.Controls.Add("VB.Label","lblR2rp",fraMinShare)
+With lblR2rp
+.Caption="= +"
+.Height=255
+.Left=5494
+.Top=1470
+.Width=400
+.Visible=1
+End With
+
+Set txtR2DynShare=frmHub.Controls.Add("VB.TextBox","txtR2DynShare",fraMinShare)
+With txtR2DynShare
+.Height=285
+.Left=5761
+.Top=1440
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Ile ma byc dodane do minimum share dla zarejestrowanych uzytkownikow. Liczba moze byc ujemna (2 ustawienia) - wartosci liczbowe"
+End With
+
+Set sldrRDynShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrRDynShare",fraMinShare)
+With sldrRDynShare
+.Height=375
+.Left=6160
+.Top=1410
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Jednostka dla obu ustawien - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set chkTNEnableDynShare=frmHub.Controls.Add("VB.CheckBox","chkTNEnableDynShare",fraMinShare)
+With chkTNEnableDynShare
+.Caption="DynMinShareUsersSet (N):"
+.Height=255
+.Left=120
+.Top=1770
+.Width=2200
+.Visible=1
+.ToolTipText="Uruchamia minimum share zalezny od ilosci uzytkownikow na hubie - po osiagnieciu X uzytkownikow minimum share dla normalnych uzytkownikow bedzie wynosil Y (Pola tekstowe odzielone mniejsza przerwa: po lewej X, po prawej Y; wieksza przerwa kolejne ustawienia X i Y)" 
+End With
+
+Set chkTREnableDynShare=frmHub.Controls.Add("VB.CheckBox","chkTREnableDynShare",fraMinShare)
+With chkTREnableDynShare
+.Caption="DynMinShareUsersSet (R):"
+.Height=255
+.Left=120
+.Top=2090
+.Width=2200
+.Visible=1
+.ToolTipText="Uruchamia minimum share zalezny od ilosci uzytkownikow na hubie - po osiagnieciu X uzytkownikow minimum share dla zarejestrowanych uzytkownikow bedzie wynosil Y (Pola tekstowe odzielone mniejsza przerwa: po lewej X, po prawej Y; wieksza przerwa kolejne ustawienia X i Y)" 
+End With
+
+sToper=2320
+For j=0 to 3
+Set txtTNU(j)=frmHub.Controls.Add("VB.TextBox","txtTNU("+cstr(j)+")",fraMinShare)
+With txtTNU(j)
+.Height=285
+.Left=sToper
+.Top=1760
+.Width=400
+.Visible=1
+.text=999
+.ToolTipText="Od ilu uzytkownikow ma wzrosnac minimum share dla normalnych uzytkownikow (poziom "+cstr(j+1)+")"
+End With
+Set txtTRU(j)=frmHub.Controls.Add("VB.TextBox","txtTRU("+cstr(j)+")",fraMinShare)
+With txtTRU(j)
+.Height=285
+.Left=sToper
+.Top=2080
+.Width=400
+.Visible=1
+.text=999
+.ToolTipText="Od ilu uzytkownikow ma wzrosnac minimum share dla zarejestrowanych uzytkownikow (poziom "+cstr(j+1)+")"
+End With
+Set txtTNDS(j)=frmHub.Controls.Add("VB.TextBox","txtTNDS("+cstr(j)+")",fraMinShare)
+With txtTNDS(j)
+.Height=285
+.Left=sToper+450
+.Top=1760
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Do ilu ma wzrosnac minimum share dla normalnych uzytkownikow po osiagnieciu X uzytkownikow (poziom "+cstr(j+1)+")"
+End With
+Set txtTRDS(j)=frmHub.Controls.Add("VB.TextBox","txtTRDS("+cstr(j)+")",fraMinShare)
+With txtTRDS(j)
+.Height=285
+.Left=sToper+450
+.Top=2080
+.Width=400
+.Visible=1
+.text=0
+.ToolTipText="Do ilu ma wzrosnac minimum share dla zarejestrowanych uzytkownikow po osiagnieciu X uzytkownikow (poziom "+cstr(j+1)+")"
+End With
+sToper=sToper+1000
+next
+
+Set sldrTNDynShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrTNDynShare",fraMinShare)
+With sldrTNDynShare
+.Height=375
+.Left=6160
+.Top=1760
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Jednostka dla wszystkich poziomow - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set sldrTRDynShare=frmHub.Controls.Add("MSComctlLib.Slider","sldrTRDynShare",fraMinShare)
+With sldrTRDynShare
+.Height=375
+.Left=6160
+.Top=2030
+.Width=800
+.Max=4
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Jednostka dla wszystkich poziomow - 0=bajty, 1=kilo, 2=mega, 3=giga, 4=tera"
+End With
+
+Set chkDynMinSlots=frmHub.Controls.Add("VB.CheckBox","chkDynMinSlots",fraMinShare)
+With chkDynMinSlots
+.Caption="DynMinSlots:"
+.Height=255
+.Left=120
+.Top=2410
+.Width=1260
+.Visible=1
+.ToolTipText="Uruchamia minimalna ilosc slotow zalezna od czasu - ustawia X slotow dla normalnych uzytkownikow, rejestrow i opow (Domyslnie=Wyl.)"
+End With
+
+Set txtDMSFrom=frmHub.Controls.Add("VB.TextBox","txtDMSFrom",fraMinShare)
+With txtDMSFrom
+.Height=285
+.Left=1420
+.Top=2400
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1200
+.ToolTipText="Od ktorej godziny minimalna ilosc slotow ma ulec zmianie (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 2 ustawienia)"
+End With
+
+Set lblMis1=frmHub.Controls.Add("VB.Label","lblMis1",fraMinShare)
+With lblMis1
+.Caption="-"
+.Height=255
+.Left=1960
+.Top=2430
+.Width=200
+.Visible=1
+End With
+
+Set txtDMSTo=frmHub.Controls.Add("VB.TextBox","txtDMSTo",fraMinShare)
+With txtDMSTo
+.Height=285
+.Left=2060
+.Top=2400
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1300
+.ToolTipText="Do ktorej godziny minimalna ilosc slotow ma byc zmieniona (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 2 ustawienia)"
+End With
+
+Set sldrNDMS=frmHub.Controls.Add("MSComctlLib.Slider","sldrNDMS",fraMinShare)
+With sldrNDMS
+.Height=375
+.Left=2560
+.Top=2370
+.Width=1340
+.Max=20
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimalna, zalezna od czasu ilosc slotow dla normlanych uzytkownikow - od 1 do 20"
+End With
+
+Set lblSlash1=frmHub.Controls.Add("VB.Label","lblSlash1",fraMinShare)
+With lblSlash1
+.Caption="/"
+.Height=255
+.Left=3965
+.Top=2430
+.Width=200
+.Visible=1
+End With
+
+Set sldrRDMS=frmHub.Controls.Add("MSComctlLib.Slider","sldrRDMS",fraMinShare)
+With sldrRDMS
+.Height=375
+.Left=4095
+.Top=2370
+.Width=1340
+.Max=20
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimalna, zalezna od czasu ilosc slotow dla zarejestrowanych uzytkownikow - od 1 do 20"
+End With
+
+Set lblSlash3=frmHub.Controls.Add("VB.Label","lblSlash3",fraMinShare)
+With lblSlash3
+.Caption="/"
+.Height=255
+.Left=5500
+.Top=2430
+.Width=200
+.Visible=1
+End With
+
+Set sldrODMS=frmHub.Controls.Add("MSComctlLib.Slider","sldrODMS",fraMinShare)
+With sldrODMS
+.Height=375
+.Left=5630
+.Top=2370
+.Width=1340
+.Max=20
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Minimalna, zalezna od czasu ilosc slotow dla OPeratorow - od 1 do 20"
+End With
+
+Set chkDynMaxHubs=frmHub.Controls.Add("VB.CheckBox","chkDynMaxHubs",fraMinShare)
+With chkDynMaxHubs
+.Caption="DynMaxHubs:"
+.Height=255
+.Left=120
+.Top=2720
+.Width=1300
+.Visible=1
+.ToolTipText="Uruchamia maksymalna ilosc hubow zalezna od czasu - ustawia X hubow dla normalnych uzytkownikow, rejestrow i opow (Domyslnie=Wyl.)"
+End With
+
+Set txtDMHFrom=frmHub.Controls.Add("VB.TextBox","txtDMHFrom",fraMinShare)
+With txtDMHFrom
+.Height=285
+.Left=1420
+.Top=2710
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1200
+.ToolTipText="Od ktorej godziny maksymalna ilosc hubow ma ulec zmianie (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 2 ustawienia)"
+End With
+
+Set lblMis2=frmHub.Controls.Add("VB.Label","lblMis2",fraMinShare)
+With lblMis2
+.Caption="-"
+.Height=255
+.Left=1960
+.Top=2740
+.Width=200
+.Visible=1
+End With
+
+Set txtDMHTo=frmHub.Controls.Add("VB.TextBox","txtDMHTo",fraMinShare)
+With txtDMHTo
+.Height=285
+.Left=2060
+.Top=2710
+.Width=500
+.Visible=1
+.Maxlength=4
+.text=1300
+.ToolTipText="Do ktorej godziny maksymalna ilosc hubow ma byc zmieniona (podawac bez : w trybie 24h, czyli zamiast 13:00 wpisujemy 1300, 2 ustawienia)"
+End With
+
+Set sldrNDMH=frmHub.Controls.Add("MSComctlLib.Slider","sldrNDMH",fraMinShare)
+With sldrNDMH
+.Height=375
+.Left=2560
+.Top=2680
+.Width=1340
+.Max=50
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Maksymalna, zalezna od czasu ilosc hubow dla normlanych uzytkownikow - od 1 do 50"
+End With
+
+Set lblSlash2=frmHub.Controls.Add("VB.Label","lblSlash2",fraMinShare)
+With lblSlash2
+.Caption="/"
+.Height=255
+.Left=3965
+.Top=2740
+.Width=200
+.Visible=1
+End With
+
+Set sldrRDMH=frmHub.Controls.Add("MSComctlLib.Slider","sldrRDMH",fraMinShare)
+With sldrRDMH
+.Height=375
+.Left=4095
+.Top=2680
+.Width=1340
+.Max=50
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Maksymalna, zalezna od czasu ilosc hubow dla zarejestrowanych uzytkownikow - od 1 do 50"
+End With
+
+Set lblSlash4=frmHub.Controls.Add("VB.Label","lblSlash4",fraMinShare)
+With lblSlash4
+.Caption="/"
+.Height=255
+.Left=5500
+.Top=2740
+.Width=200
+.Visible=1
+End With
+
+Set sldrODMH=frmHub.Controls.Add("MSComctlLib.Slider","sldrODMH",fraMinShare)
+With sldrODMH
+.Height=375
+.Left=5630
+.Top=2680
+.Width=1340
+.Max=50
+.TickFrequency=1
+.Visible=1
+.ToolTipText="Maksymalna, zalezna od czasu ilosc hubow dla OPeratorow - od 1 do 50"
+End With
+
+Set chkFDT=frmHub.Controls.Add("VB.CheckBox","chkFDT",fraMinShare)
+With chkFDT
+.Caption="Force Description To:"
+.Height=255
+.Left=120
+.Top=3080
+.Width=1850
+.Visible=1
+.ToolTipText="Uruchamia specjalny, powiekszony opis huba obslugujacy zmienne"
+End With
+
+Set txtFDT=frmHub.Controls.Add("VB.TextBox","txtFDT",fraMinShare)
+With txtFDT
+.Height=255
+.Left=2020
+.Top=3050
+.Width=4860
+.Visible=1
+.ToolTipText="Zmienne: %[Xshare], %[Xslots], %[Xhubs], %[Xsph], %[uplimit], %[dcppv], %[hubshare], %[users], %[maxusers], %[peak]; X=n, r lub o"
+End With
+
+Set lblTMI=frmHub.Controls.Add("VB.Label","lblTMI",fraMinShare)
+With lblTMI
+.Caption="Szybkosc procedury TimeScript w ms:"
+.Height=255
+.Left=120
+.Top=3360
+.Width=2690
+.Visible=1
+.ToolTipText="Szybkosc poszerzania okna oraz wykonywania niektorych obliczen, a takze szybkosc reakcji na zaznaczenie niektorych checkboxow"
+End With
+
+Set sldrTMI=frmHub.Controls.Add("MSComctlLib.Slider","sldrTMI",fraMinShare)
+With sldrTMI
+.Height=255
+.Left=2760
+.Top=3320
+.Width=3290
+.Visible=1
+.Min=9
+.Max=2000
+.TickFrequency=100
+.value=100
+.ToolTipText="Od 9 milisekund do 2 sekund (2000ms) [zbyt niska wartosc moze przyczynic sie do spowolnienia komputera]"
+End With
+
+Set txtHS=frmHub.Controls.Add("VB.TextBox","txtHS",fraMinShare)
+With txtHS
+.Height=255
+.Left=6090
+.Top=3350
+.Width=800
+.Visible=1
+.Enabled=0
+End With
+
+Set chkAllHubs=frmHub.Controls.Add("VB.CheckBox","chkAllHubs",fraMinShare)
+With chkAllHubs
+.Caption="Zl. wszystkie huby"
+.Height=255
+.Left=7020
+.Top=3360
+.Width=1600
+.Visible=1
+.ToolTipText="Wlacza zliczanie wszystkich hubow, takze tych jako OPerator i zarejestrowany uzytkownik (np.: jesli wyl: H:3/2/1=3, wl:H:3/2/1=6; Domyslnie=Wyl.)"
+End With
+
+Set chkRej=frmHub.Controls.Add("VB.CheckBox","chkRej",fraMinShare)
+With chkRej
+.Caption="Rejestracja!"
+.Height=255
+.Left=8020
+.Top=3360
+.Width=1200
+.Visible=1
+.ToolTipText="Kliknij aby zarejestrowac Advanced Minimum Share with GUI. Numer rejestracyjny uzyskasz pod: mr_krzych00@tlen.pl"
+End With
+
+Set chkAbout=frmHub.Controls.Add("VB.CheckBox","chkAbout",fraMinShare)
+With chkAbout
+.Caption="About!"
+.Height=255
+.Left=8750
+.Top=3360
+.Width=800
+.Visible=0
+.ToolTipText="Male info o skrypcie :)"
+End With
+
+sToper=3640
+For j=0 to 5
+If not j=5 then
+Set txtR(j)=frmHub.Controls.Add("VB.TextBox","txtR("+cstr(j)+")",fraMinShare)
+With txtR(j)
+.Height=255
+.Left=7020
+.Top=sToper
+.Width=1800
+.Visible=1
+.text="redirect address"
+.ToolTipText="Hub do ktorego beda przekierowani uzytkownicy niespelniajacy danego wymogu (dziala tylko gdy suwak po prawej jest ustawiony w pozycji srodkowej)"
+End With
+Set sldrDRK(j)=frmHub.Controls.Add("MSComctlLib.Slider","txtDRK("+cstr(j)+")",fraMinShare)
+With sldrDRK(j)
+.Height=375
+.Left=8820
+.Top=sToper-20
+.Width=800
+.Max=2
+.TickFrequency=1
+.Visible=1
+.value=1
+.ToolTipText="0 = Disconnect (rozlacza uzytkownika), 1 = Redirect (przekierowuje uzytkownika do huba wpisanego po prawej), 2 = Kick (Kopie uzytkownika = disconnect + 15 min tempban)"
+End With
+End If
+Set chkMsg(j)=frmHub.Controls.Add("VB.CheckBox","chkMsg("+cstr(j)+")",fraMinShare)
+With chkMsg(j)
+.Height=255
+.Left=120
+.Top=sToper+10
+.Width=1550
+.Visible=1
+.value=1
+End With
+Set txtMsg(j)=frmHub.Controls.Add("VB.TextBox","txtMsg("+cstr(j)+")",fraMinShare)
+With txtMsg(j)
+.Height=255
+.Left=1670
+.Top=sToper
+.Width=5220
+.Visible=1
+End With
+sToper=sToper+320
+next
+txtMsg(0).text="Your DC++ is too old... Please update it at http://dcplusplus.sourceforge.net"
+txtMsg(0).ToolTipText="Zmienne: %[v] - minimalna, wymagana wersja dc++, %[uv] - wersja dc++ uzytkownika, %[tab] - tabulator, %[enter] - od nowej lini"
+txtMsg(1).text="Twoj limit szybkosci uploadow jest zbyt niski (%[uul] kB/s)... Minimum to %[ul] kB/s..."
+txtMsg(1).ToolTipText="Zmienne: %[ul] - najnizsze pasmo wysylania (upload bandwidth limit) wymagane na hubie, %[uul] - pasmo uzytkownika, %[tab] - tabulator, %[enter] - od nowej lini"
+txtMsg(2).text="Udostepniasz %[us]... Wymagane minimum na tym hubie %[share]..."
+txtMsg(2).ToolTipText="Zmienne: %[ul] - najnizsze pasmo wysylania (upload bandwidth limit) wymagane na hubie, %[uul] - pasmo uzytkownika, %[tab] - tabulator, %[enter] - od nowej lini"
+txtMsg(3).text="%[enter]%[enter]Minimalna ilosc slotow:%[tab].%[tab].%[tab]%[slt].%[enter]Minimalna ilosc slotow na huba:%[tab].%[tab]%[sph].%[enter]"
+txtMsg(3).ToolTipText="Zmienne: %[slt] - minimalna, wymagana ilosc slotow, %[sph] - minimalna, wymagana ilosc slotow na huba, %[us] - ilosc slotow uzytkownika, %[tab] - tabulator, %[enter] - od nowej lini"
+txtMsg(4).text="Niestety, przekroczyles/as limit hubow(%[hubs])."
+txtMsg(4).ToolTipText="Zmienne: %[hubs] - maksymalna, dozwolona ilosc hubow, %[uh] - ilosc hubow do ktorej polaczony jest uzytkownik, %[tab] - tabulator, %[enter] - od nowej lini"
+txtMsg(5).text="Uzywasz: %[klient]%[h]%[s]. Udostepniasz: %[share]."
+txtMsg(5).ToolTipText="Zmienne: %[klient] - NMDC lub DC++, %[s] i %[h] (patrz po prawej), %[share] - ilosc danych shareowanych przez uzytkownika, %[tab] - tabulator, %[enter] - od nowej lini"
+chkMsg(0).Caption="Old DC++ msg:"
+chkMsg(0).ToolTipText="Wlacza wiadomosc, jaka pojawi sie uzytkownikowi gdy ma za stara wersje DC++"
+chkMsg(1).Caption="Low u/l bw. msg:"
+chkMsg(1).ToolTipText="Wlacza wiadomosc, jaka pojawi sie uzytkownikowi gdy ma zbyt mocno ograniczone pasmo wysylania (upload bandwidth limit)"
+chkMsg(2).Caption="Share More msg:"
+chkMsg(2).ToolTipText="Wlacza wiadomosc, jaka pojawi sie uzytkownikowi gdy zbyt malo udostepnia danych"
+chkMsg(3).Caption="Too few slots m:"
+chkMsg(3).ToolTipText="Wlacza wiadomosc, jaka pojawi sie uzytkownikowi gdy zbyt malo udostepnia danych"
+chkMsg(4).Caption="TooManyHubsM:"
+chkMsg(4).ToolTipText="Wlacza wiadomosc, jaka pojawi sie uzytkownikowi gdy jest on polaczyny ze zbyt duza iloscia hubow"
+chkMsg(5).Caption="Good Message:"
+chkMsg(5).ToolTipText="Wlacza wiadomosc, jaka pojawi sie uzytkownikowi gdy spelnia on wszystkie wymagania"
+
+Set lblZmS=frmHub.Controls.Add("VB.Label","lblZmS",fraMinShare)
+With lblZmS
+.Caption="%[s]:"
+.Height=255
+.Left=7190
+.Top=5270
+.Width=350
+.Visible=1
+.ToolTipText="Ustawienia zmiennej %[s] dla Good Message"
+End With
+
+Set txtZmS=frmHub.Controls.Add("VB.TextBox","txtZmS",fraMinShare)
+With txtZmS
+.Height=255
+.Left=7550
+.Top=5240
+.Width=800
+.Visible=1
+.text=". Slotow %[s]"
+.ToolTipText="Zmienne: %[s] - ilosc upload slotow otwartych przez uzytkownika"
+End With
+
+Set lblZmH=frmHub.Controls.Add("VB.Label","lblZmH",fraMinShare)
+With lblZmH
+.Caption="%[h]:"
+.Height=255
+.Left=8380
+.Top=5270
+.Width=350
+.Visible=1
+.ToolTipText="Ustawienia zmiennej %[h] dla Good Message"
+End With
+
+Set txtZmH=frmHub.Controls.Add("VB.TextBox","txtZmH",fraMinShare)
+With txtZmH
+.Height=255
+.Left=8740
+.Top=5240
+.Width=800
+.Visible=1
+.text=", polaczonego z %[hn] hubami jako User [Reg: %[hr], OP: %[ho]]"
+.ToolTipText="Zmienne: %[hn] - ilosc polaczen z hubami jako normalny uzytkownika, %[hr] - jako zarejestrowany uzytkownik, %[ho] - jako OPerator"
+End With
+
+Set lblInvisibleUsers=frmHub.Controls.Add("VB.Label","lblInvisibleUsers",fraMinShare)
+With lblInvisibleUsers
+.Caption="Invisible Users:"
+.Height=255
+.Left=120
+.Top=5580
+.Width=1200
+.Visible=1
+.ToolTipText="W fazie testow (still developing)... nie zaleca sie wpisywania czegokolwiek w polu tekstowym obok"
+End With
+
+Set txtInvisibleUsers=frmHub.Controls.Add("VB.TextBox","txtInvisibleUsers",fraMinShare)
+With txtInvisibleUsers
+.Height=255
+.Left=1250
+.Top=5550
+.Width=7950
+.Visible=1
+.text="user1, user2, ..."
+.ToolTipText="W fazie testow (still developing)... nie zaleca sie wpisywania czegokolwiek w tym polu tekstowym"
+End With
+
+Set txtIUInterval=frmHub.Controls.Add("VB.TextBox","txtIUInterval",fraMinShare)
+With txtIUInterval
+.Height=255
+.Left=9250
+.Top=5550
+.Width=300
+.Visible=1
+.text="10"
+.ToolTipText="W fazie testow (still developing)... nie zaleca sie wpisywania czegokolwiek w tym polu tekstowym"
+End With
+
+sZaImie="UNREGISTERED"
+sPeak=0
+
+End Sub
+
+Sub SaveSetting()
+Dim fsoEngine,hF
+Set fsoEngine=CreateObject("Scripting.FileSystemObject")
+Set hF=fsoEngine.CreateTextFile(CStr(sIniFile),1)
+hF.WriteLine "[Advanced Minimum Share v5.71B by Mr_KrzYch00]"
+hF.WriteLine ""
+hF.WriteLine "NB = "+txtBN.Text
+hF.WriteLine "Peak = " & sPeak
+hF.WriteLine "NJed = " & sldrNMinShare.value
+hF.WriteLine "RJed = " & sldrRMinShare.value
+hF.WriteLine "OJed = " & sldrOMinShare.value
+hF.WriteLine "MXJ = " & sldrMaxShare.value
+hF.WriteLine "MSN = " & txtNMinShare.text
+hF.WriteLine "MSR = " & txtRMinShare.text
+hF.WriteLine "MSO = " & txtOMinShare.text
+hF.WriteLine "MXS = " & txtMaxShare.text
+hF.WriteLine "IsMX = " & chkMaxShare.value
+hF.WriteLine "NMS = " & sldrNormalMinSlots.value
+hF.WriteLine "RMS = " & sldrRegMinSlots.value
+hF.WriteLine "OMS = " & sldrOPMinSlots.value
+hF.WriteLine "UL = " & txtMinUpload.Text
+hF.WriteLine "NSPH = " & txtNSperH.text
+hF.WriteLine "RSPH = " & txtRSperH.text
+hF.WriteLine "OSPH = " & txtOSperH.text
+hF.WriteLine "NMH = " & sldrNMaxHubs.value
+hF.WriteLine "RMH = " & sldrRMaxHubs.value
+hF.WriteLine "OMH = " & sldrOMaxHubs.value
+hF.WriteLine "NEDS = " & chkNEnableDynShare.value
+hF.WriteLine "NDF = " & txtN1DynShareFrom.text
+hF.WriteLine "NDT = " & txtN1DynShareTo.text
+hF.WriteLine "NDMS = " & txtN1DynShare.text
+hF.WriteLine "N2DF = " & txtN2DynShareFrom.text
+hF.WriteLine "N2DT = " & txtN2DynShareTo.text
+hF.WriteLine "N2DMS = " & txtN2DynShare.text
+hF.WriteLine "NDJ = " & sldrNDynShare.value
+hF.WriteLine "REDS = " & chkREnableDynShare.value
+hF.WriteLine "RDF = " & txtR1DynShareFrom.text
+hF.WriteLine "RDT = " & txtR1DynShareTo.text
+hF.WriteLine "RDMS = " & txtR1DynShare.text
+hF.WriteLine "R2DF = " & txtR2DynShareFrom.text
+hF.WriteLine "R2DT = " & txtR2DynShareTo.text
+hF.WriteLine "R2DMS = " & txtR2DynShare.text
+hF.WriteLine "RDJ = " & sldrRDynShare.value
+hF.WriteLine "UNEDS = " & chkTNEnableDynShare.value
+hF.WriteLine "UREDS = " & chkTREnableDynShare.value
+For j=0 to 3
+hF.WriteLine "UNU"+cstr(j)+" = " & txtTNU(j).text
+hF.WriteLine "URU"+cstr(j)+" = " & txtTRU(j).text
+hF.WriteLine "UNMS"+cstr(j)+" = " & txtTNDS(j).text
+hF.WriteLine "URMS"+cstr(j)+" = " & txtTRDS(j).text
+next
+hF.WriteLine "UNJ = " & sldrTNDynShare.value
+hF.WriteLine "URJ = " & sldrTRDynShare.value
+hF.WriteLine "DMSE = " & chkDynMinSlots.value
+hF.WriteLine "DMSF = " & txtDMSFrom.text
+hF.WriteLine "DMST = " & txtDMSTo.text
+hF.WriteLine "DMSN = " & sldrNDMS.value
+hF.WriteLine "DMSR = " & sldrRDMS.value
+hF.WriteLine "DMSO = " & sldrODMS.value
+hF.WriteLine "DMHE = " & chkDynMaxHubs.value
+hF.WriteLine "DMHF = " & txtDMHFrom.text
+hF.WriteLine "DMHT = " & txtDMHTo.text
+hF.WriteLine "DMHN = " & sldrNDMH.value
+hF.WriteLine "DMHR = " & sldrRDMH.value
+hF.WriteLine "DMHO = " & sldrODMH.value
+hF.WriteLine "AI = " & chkAllowInfo.value
+hF.WriteLine "SFO = " & chkOpSlots.value
+hF.WriteLine "AH = " & chkAllHubs.value
+hF.WriteLine "UIC = " & txtInfo.text
+hF.WriteLine "MV = " & txtV.text
+hF.WriteLine "%[s] = " & txtZmS.text
+hF.WriteLine "%[h] = " & txtZmH.text
+For j=0 to 5
+hF.WriteLine "OnMsg-"+cstr(j)+" = " & chkMsg(j).value
+hF.WriteLine "Msg"+cstr(j)+" = " & txtMsg(j).text
+If not j=5 then
+hF.WriteLine "DRK"+cstr(j)+" = " & sldrDRK(j).value
+hF.WriteLine "R"+cstr(j)+" = " & txtR(j).text
+End If
+next
+hF.WriteLine "OPP = " & txtOPP.text
+hF.WriteLine "RUP = " & txtRUP.text
+hF.WriteLine "ADN = " & txtADN.text
+hF.WriteLine "ADP = " & txtADP.text
+hF.WriteLine "FDT1 = " & chkFDT.value
+hF.WriteLine "FDT2 = " & txtFDT.text
+hF.WriteLine "TMI = " & sldrTMI.value
+hF.WriteLine "PXDE = " & chkPXDE.value
+hF.WriteLine "AMD = " & chkAM.value
+hF.WriteLine "-I-U- = " & txtInvisibleUsers.text
+hF.WriteLine "+I+U+ = " & txtIUInterval.text
+hF.WriteLine "RN = " & sZaImie
+hF.WriteLine "Serial = " & sZaNumer
+hF.WriteLine ""
+hF.WriteLine "[Advanced Minimum Share v5.71B by Mr_KrzYch00]"
+hF.Close
+End Sub
+
+Sub LoadSettings()
+Dim fsoEngine,hF,sLine,sKey,V,iTemp
+Set fsoEngine=CreateObject("Scripting.FileSystemObject")
+If Not fsoEngine.FileExists(sIniFile) Then
+Exit Sub
+End If
+Const ForReading=1
+Set hF=fsoEngine.OpenTextFile(sIniFile,ForReading)
+Do While Not hF.AtEndOfStream
+sLine=Trim(hF.ReadLine)
+If InStr(sLine,"=")<>0 Then
+sKey=Trim(BeforeFirst(sLine,"="))
+V=AfterFirst(sLine,"=")
+Select Case sKey
+Case "NB"
+txtBN.Text=trim(V)
+Case "Peak"
+sPeak=trim(V)
+Case "NJed"
+sldrNMinShare.value=trim(V)
+Case "RJed"
+sldrRMinShare.value=trim(V)
+Case "OJed"
+sldrOMinShare.value=trim(V)
+Case "MXJ"
+sldrMaxShare.value=trim(V)
+Case "MSN"
+txtNMinShare.text=trim(V)
+Case "MSR"
+txtRMinShare.text=trim(V)
+Case "MSO"
+txtOMinShare.text=trim(V)
+Case "MXS"
+txtMaxShare.text=trim(V)
+Case "IsMX"
+chkMaxShare.value=trim(V)
+Case "NMS"
+sldrNormalMinSlots.value=trim(V)
+Case "RMS"
+sldrRegMinSlots.value=trim(V)
+Case "OMS"
+sldrOPMinSlots.value=trim(V)
+Case "UL"
+txtMinUpload.Text=trim(V)
+Case "NSPH"
+txtNSperH.text=trim(V)
+Case "RSPH"
+txtRSperH.text=trim(V)
+Case "OSPH"
+txtOSperH.text=trim(V)
+Case "NMH"
+sldrNMaxHubs.value=trim(V)
+Case "RMH"
+sldrRMaxHubs.value=trim(V)
+Case "OMH"
+sldrOMaxHubs.value=trim(V)
+Case "NEDS"
+chkNEnableDynShare.value=trim(V)
+Case "NDF"
+txtN1DynShareFrom.text=trim(V)
+Case "NDT"
+txtN1DynShareTo.text=trim(V)
+Case "NDMS"
+txtN1DynShare.text=trim(V)
+Case "N2DF"
+txtN2DynShareFrom.text=trim(V)
+Case "N2DT"
+txtN2DynShareTo.text=trim(V)
+Case "N2DMS"
+txtN2DynShare.text=trim(V)
+Case "NDJ"
+sldrNDynShare.value=trim(V)
+Case "REDS"
+chkREnableDynShare.value=trim(V)
+Case "RDF"
+txtR1DynShareFrom.text=trim(V)
+Case "RDT"
+txtR1DynShareTo.text=trim(V)
+Case "RDMS"
+txtR1DynShare.text=trim(V)
+Case "R2DF"
+txtR2DynShareFrom.text=trim(V)
+Case "R2DT"
+txtR2DynShareTo.text=trim(V)
+Case "R2DMS"
+txtR2DynShare.text=trim(V)
+Case "RDJ"
+sldrRDynShare.value=trim(V)
+Case "UNEDS"
+chkTNEnableDynShare.value=trim(V)
+Case "UREDS"
+chkTREnableDynShare.value=trim(V)
+Case "UNJ"
+sldrTNDynShare.value=trim(V)
+Case "URJ"
+sldrTRDynShare.value=trim(V)
+Case "DMSE"
+chkDynMinSlots.value=trim(V)
+Case "DMSF"
+txtDMSFrom.text=trim(V)
+Case "DMST"
+txtDMSTo.text=trim(V)
+Case "DMSN"
+sldrNDMS.value=trim(V)
+Case "DMSR"
+sldrRDMS.value=trim(V)
+Case "DMSO"
+sldrODMS.value=trim(V)
+Case "DMHE"
+chkDynMaxHubs.value=trim(V)
+Case "DMHF"
+txtDMHFrom.text=trim(V)
+Case "DMHT"
+txtDMHTo.text=trim(V)
+Case "DMHN"
+sldrNDMH.value=trim(V)
+Case "DMHR"
+sldrRDMH.value=trim(V)
+Case "DMHO"
+sldrODMH.value=trim(V)
+Case "AI"
+chkAllowInfo.value=trim(V)
+Case "UIC"
+txtInfo.text=trim(V)
+Case "SFO"
+chkOpSlots.value=trim(V)
+Case "AH"
+chkAllHubs.value=trim(V)
+Case "MV"
+txtV.text=trim(V)
+Case "%[s]"
+txtZmS.text=trim(V)
+Case "%[h]"
+txtZmH.text=trim(V)
+Case "OPP"
+txtOPP.text=trim(V)
+Case "RUP"
+txtRUP.text=trim(V)
+Case "ADN"
+txtADN.text=trim(V)
+Case "ADP"
+txtADP.text=trim(V)
+Case "FDT1"
+chkFDT.value=trim(V)
+Case "FDT2"
+txtFDT.text=trim(V)
+Case "TMI"
+sldrTMI.value=trim(V)
+Case "AMD"
+chkAM.value=trim(V)
+Case "PXDE"
+chkPXDE.value=trim(V)
+Case "-I-U-"
+txtInvisibleUsers.text=trim(V)
+Case "+I+U+"
+txtIUInterval.text=trim(V)
+Case "RN"
+sZaImie=trim(V)
+Case "Serial"
+sZaNumer=trim(V)
+End Select
+For j=0 to 5
+Select Case sKey
+Case "Msg"+cstr(j)
+If not j>4 then txtMsg(j).text=trim(V)
+Case "OnMsg-"+cstr(j)
+chkMsg(j).value=trim(V)
+Case "DRK"+cstr(j)
+If not j>4 then sldrDRK(j).value=trim(V)
+Case "R"+cstr(j)
+If not j>4 then txtR(j).text=trim(V)
+Case "UNU"+cstr(j)
+If not j>3 then txtTNU(j).text=trim(V)
+Case "URU"+cstr(j)
+If not j>3 then txtTRU(j).text=trim(V)
+Case "UNMS"+cstr(j)
+If not j>3 then txtTNDS(j).text=trim(V)
+Case "URMS"+cstr(j)
+If not j>3 then txtTRDS(j).text=trim(V)
+End Select
+next
+End If
+Loop
+hF.Close
+End Sub
+
+Sub tmrScriptTimer_Timer()
+zsd=zsd-1
+zds=zds-1
+If chkAbout.value=1 then
+MsgBox "Advanced Minimum Share v5.71 BETA"+vbCrLf+"Copyright © "+chr(34)+"Mr_KrzYch00"+chr(34)+", 2003. All Rights Reserved."+vbCrLf+vbCrLf+"Registered to: "+sZaImie+vbCrLF+"Script-Key: "+sZaNumer+vbCrLf+vbCrLf+vbCrLf+"-> Special THX to:"+vbCrLf+vbCrLf+"-> -=JaNeK=-"+vbTab+"<- [testing, bug raporting]"+vbCrLf+"-> qPat"+vbTab+vbTab+"<- [testing, bug raporting]"+vbCrLf+"-> ^Paola^"+vbTab+"<- [testing]"+vbCrLf+"-> Spawacz55"+vbTab+"<- [Our network creator :P]"+vbCrLf+"-> Silver"+vbTab+vbTab+"<- [testing, bug raporting]"+vbCrLf+"-> Greenwitch"+vbTab+"<- [testing]"+vbCrLf+"-> Other ppl"+vbTab+"<-",,"About"
+chkAbout.value=0
+elseIf chkRej.value=1 then
+tmrScriptTimer.Enabled=0
+sImie=InputBox("Please, enter Your Name:")
+sZaImie=sImie
+sNumer=InputBox("Your Script-Key:")
+sZaNumer=sNumer
+If len(sImie)<6 then
+MsgBox "Your name is too short [min 6 letters].",,"Error"
+chkRej.value=0
+tmrScriptTimer.Enabled=1
+else If InStr(1,sNumer,"-")=0 then
+MsgBox ("Bledny klucz...")
+chkRej.value=0
+frmHub.Controls.Remove "MinShare"
+frmHub.Height=4340
+frmHub.lstSelector.ListItems.Remove "MinShare"
+else For x=1 to Len(sImie)
+sNumer2=255-int(rnd*100)
+If x=1 then
+sNumer2=BeforeFirst(sNumer,"-")
+else sNumer=AfterFirst(sNumer,"-")
+If InStr(1,sNumer,"-")>0 then
+sNumer2=BeforeFirst(sNumer,"-")
+elseIf sraz="" then
+sNumer2=sNumer
+sraz=sNumer
+else sNumer2=255-int(rnd*100)
+End If
+End If
+If not chr(sNumer2)=Left(sImie,1) or sNumer2="" then
+MsgBox "Invalid Script-Key! Shutdowning!",,"Error"
+chkRej.value=0
+frmHub.Controls.Remove "MinShare"
+frmHub.Height=4320
+frmHub.lstSelector.ListItems.Remove "MinShare"
+Exit For
+else sImie=AfterFirst(sImie,Left(sImie,1))
+End If
+next
+If sImie="" and InStr(1,sNumer,"-")=0 then
+MsgBox "Thx for Registering!"+vbCrLf+vbCrLf+"Registered to: "+sZaImie+vbCrLF+"Script-Key: "+sZaNumer,,"Registered"
+chkRej.value=0
+SaveSetting
+txtBN.text=Replace(txtBN.text,"_UNREGISTERED","")
+Call Registered
+End If
+End If
+End If
+End If
+tmrScriptTimer.Interval=sldrTMI.value
+If frmHub.lstSelector.ListItems(5).Selected or frmHub.lstSelector.ListItems(9).Selected then
+If frmHub.fraStatus.Width<9650 then
+wtemp=wtemp+1
+frmHub.Width=frmHub.Width+115
+If frmHub.fraStatus.Height>(frmHub.Height-800) then frmHub.Height=frmHub.Height+100
+fraMinShare.Width=fraMinShare.Width+115
+frmHub.fraStatus.Width=frmHub.fraStatus.Width+115
+fraMinShare.Height=fraMinShare.Height+100
+frmHub.fraStatus.Height=frmHub.fraStatus.Height+100
+frmHub.lstStatus.Width=frmHub.lstStatus.Width+115
+If wtemp=2 then
+frmHub.lstStatus.Height=frmHub.lstStatus.Height+200
+wtemp=0
+End If
+frmHub.lstOpActions.Width=frmHub.lstOpActions.Width+115
+frmHub.lstOpActions.Top=frmHub.lstOpActions.Top+100
+frmHub.lstErrors.Top=frmHub.lstErrors.Top+100
+End If
+else If frmHub.fraStatus.Width>7090 then
+wtemp=wtemp-1
+frmHub.Width=frmHub.Width-115
+frmHub.Height=frmHub.Height-100
+fraMinShare.Width=fraMinShare.Width-115
+frmHub.fraStatus.Width=frmHub.fraStatus.Width-115
+frmHub.fraStatus.Height=frmHub.fraStatus.Height-100
+fraMinShare.Height=fraMinShare.Height-100
+frmHub.lstStatus.Width=frmHub.lstStatus.Width-115
+If wtemp=-2 then
+frmHub.lstStatus.Height=frmHub.lstStatus.Height-150
+wtemp=0
+End If
+frmHub.lstOpActions.Width=frmHub.lstOpActions.Width-115
+frmHub.lstOpActions.Top=frmHub.lstOpActions.Top-100
+frmHub.lstErrors.Top=frmHub.lstErrors.Top-100
+End If
+End If
+snow=snow+1
+If snow>=600 then
+If chkFDT.value=1 then
+frmhub.txtDescription.maxlength=0
+frmhub.txtDescription.Enabled=1
+If chkPXDE.value=1 then 
+frmHub.txtDescription.text=Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(txtFDT.text,"%[nshare]",txtNMinShare.text),"%[rshare]",txtRMinShare.text),"%[nslots]",sldrNormalMinSlots.value),"%[rslots]",sldrRegMinSlots.value),"%[oslots]",sldrOPMinSlots.value),"%[nhubs]",sldrNMaxHubs.value),"%[rhubs]",sldrRMaxHubs.value),"%[ohubs]",sldrOMaxHubs.value),"%[uplimit]",txtMinUpload.Text),"%[nsph]",txtNSperH.text),"%[rsph]",txtRSperH.text),"%[osph]",txtOSperH.text),"%[dcppv]",txtV.text),"%[hubshare]",HubShared),"%[users]",ColUsers.Count()),"%[maxusers]",frmHub.sldrMaxUsers.value),"%[peak]",sPeak)+".px."
+else frmHub.txtDescription.text=Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(txtFDT.text,"%[nshare]",txtNMinShare.text),"%[rshare]",txtRMinShare.text),"%[nslots]",sldrNormalMinSlots.value),"%[rslots]",sldrRegMinSlots.value),"%[oslots]",sldrOPMinSlots.value),"%[nhubs]",sldrNMaxHubs.value),"%[rhubs]",sldrRMaxHubs.value),"%[ohubs]",sldrOMaxHubs.value),"%[uplimit]",txtMinUpload.Text),"%[nsph]",txtNSperH.text),"%[rsph]",txtRSperH.text),"%[osph]",txtOSperH.text),"%[dcppv]",txtV.text),"%[hubshare]",HubShared),"%[users]",ColUsers.Count()),"%[maxusers]",frmHub.sldrMaxUsers.value),"%[peak]",sPeak)+"   -<-< AMS v5.71B --- "+cstr(sIsReg)+" >->-"
+End If
+else frmhub.txtDescription.maxlength=55
+frmhub.txtDescription.Enabled=1
+End If
+Dim sIPs,zIP
+sBotName=txtBN.Text
+SaveSetting
+If colusers.online(cstr(DisUser)) then
+For each sIPs in colUsers
+If sIPs.sName=cstr(DisUser) then
+zIP=sIPs.IP
+End If
+next
+If cstr(DisUser2)=cstr(DisUser) then
+frmHub.lstOpActions.AddItem "["+(FormatDateTime(now(),vbshorttime))+"] Kicked: "+cstr(DisUser)+" ("+cstr(zIP)+") {2nd Follow Redirect OFF}"
+ColUsers.ItemByName(cstr(DisUser)).kick()
+else frmHub.lstOpActions.AddItem "["+(FormatDateTime(now(),vbshorttime))+"] Disconnected: "+cstr(DisUser)+" ("+cstr(zIP)+") {Follow Redirect OFF}"
+ColUsers.ItemByName(cstr(DisUser)).disconnect()
+DisUser2=DisUser
+End If
+End If
+snow=0
+End If
+End Sub
+
+Sub DataArival(curUser,sCurData)
+Dim klient,iDCPPMinSlotsPerHub,iDCPPMaxHubs,MinSlots,MinUpload,zSlotow,sHubs,sCommand,iTheirSharedBytes,x,iCHubs,iSlots,sDCI,sTmp,user,i,iUpload,sSlots,sOP,sReg,sVers
+If isCommand(sCurData) then
+If Instr(1,sCurData," ")>0 Then
+sCommand=BeforeFirst(sCurData," ")
+Else sCommand=sCurData
+End If
+Select Case sCommand
+Case "$MyINFO"
+If chkAM.value=1 then
+If InStr(curUser.sMyInfoString,"$$  ") or InStr(curUser.sMyInfoString,"mldonkey client") or InStr(curUser.sMyInfoString,"a Progger creation :-P") or InStr(curUser.sMyInfoString,"mldc client") then
+curUser.Kick()
+Exit Sub
+End If
+End If
+sBotName=txtBN.Text
+sVers=0
+user=curUser.sName
+DisUser=""
+sTime=Replace((FormatDateTime(now(),vbshorttime)),":","")
+
+
+sDCI=sCurData
+For x=1 to 2
+sDCI=AfterFirst(sDCI,"$")
+Next
+
+If cdbl(sPeak)<cdbl(ColUsers.Count()) then sPeak=ColUsers.Count()
+if InStr(1,sDCI,"<DCGUI V:")>1 then
+klient="DCGUI"
+elseif InStr(1,sDCI,"<++ V:")>1 then
+klient="DC++"
+else klient="NMDC"
+End If
+if InStr(1,sDCI,"<++ V:") or InStr(1,sDCI,"<DCGUI V:")>1 Then
+
+
+sDCI=AfterLast(sDCI," V:")
+sVers=BeforeFirst(sDCI,",M:")
+If cdbl(sVers)<cdbl(txtV.text) and not curUser.bOperator then
+If chkMsg(0).value=1 then curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(txtMsg(0).text,"%[v]",txtV.text),"%[uv]",sVers),"%[tab]",vbTab),"%[enter]",vbCrLf)
+frmHub.DoEventsForMe
+If sldrDRK(0).value=0 then curUser.Disconnect()
+If sldrDRK(0).value=1 then curUser.ForceMove txtR(0).text
+If sldrDRK(0).value=2 then curUser.kick()
+Exit Sub
+End If
+sDCI=AfterFirst(sDCI,"H:")
+sTmp=BeforeFirst(sDCI,">")
+if InStr(1,sTmp,",") Then sTmp=BeforeFirst(sTmp,",")
+if InStr(1,sTmp,"/") Then
+sOp=cdbl(AfterFirst(AfterFirst(sTmp,"/"),"/"))
+sReg=cdbl(BeforeFirst(AfterFirst(sTmp,"/"),"/"))
+sTmp=BeforeFirst(sTmp,"/")
+else sOP="?"
+sReg="?"
+End If
+iCHubs=cdbl(sTmp)
+If chkAllHubs.value=1 then iCHubs=cdbl(sTmp)+cdbl(Replace(cstr(sOp),"?",0))+cdbl(Replace(cstr(sReg),"?",0))
+
+sDCI=AfterFirst(sDCI,"S:")
+sTmp=BeforeFirst(sDCI,">")
+sSlots=BeforeFirst(sDCI,">")
+if InStr(1,sTmp,",") Then sSlots=BeforeFirst(sTmp,",")
+If InStr(1,sTmp,"B") then iUpload=cdbl(BeforeFirst(AfterLast(sDCI,"B:"),">"))
+
+If not(curUser.bOperator) Then
+If not(iUpload="") then
+MinUpload=txtMinUpload.text
+If (cdbl(iUpload))<(cdbl(MinUpload)) then
+If chkMsg(1).value=1 then curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(txtMsg(1).text,"%[ul]",MinUpload),"%[uul]",iUpload),"%[tab]",vbTab),"%[enter]",vbCrLF)
+frmHub.DoEventsForMe
+DisUser=CurUser.sName
+If sldrDRK(1).value=0 then curUser.Disconnect()
+If sldrDRK(1).value=1 then curUser.ForceMove txtR(1).text
+If sldrDRK(1).value=2 then curUser.kick()
+Exit Sub
+End If
+End If
+End If
+
+
+If not(curUser.bOperator) then
+iDCPPMaxHubs=sldrNMaxHubs.value
+If chkDynMaxHubs.value=1 then
+If txtDMHFrom.text>txtDMHTo.text then
+If sTime>txtDMHFrom.text or sTime<txtDMHTo.text then iDCPPMaxHubs=sldrNDMH.value
+else If sTime>txtDMHFrom.text and sTime<txtDMHTo.text then iDCPPMaxHubs=sldrNDMH.value
+End If
+End If
+for i=1 to frmHub.lstOps.listItems.count
+if cstr(CurUser.sName)=cstr(frmHub.lstOps.listItems(i).text) then
+iDCPPMaxHubs=sldrRMaxHubs.value
+If chkDynMaxHubs.value=1 then
+If txtDMHFrom.text>txtDMHTo.text then
+If sTime>txtDMHFrom.text or sTime<txtDMHTo.text then iDCPPMaxHubs=sldrRDMH.value
+else If sTime>txtDMHFrom.text and sTime<txtDMHTo.text then iDCPPMaxHubs=sldrRDMH.value
+End If
+End If
+End If
+Next
+else If chkOpSlots.value=1 then
+iDCPPMaxHubs=sldrOMaxHubs.value
+If chkDynMaxHubs.value=1 then
+If txtDMHFrom.text>txtDMHTo.text then
+If sTime>txtDMHFrom.text or sTime<txtDMHTo.text then iDCPPMaxHubs=sldrODMH.value
+else If sTime>txtDMHFrom.text and sTime<txtDMHTo.text then iDCPPMaxHubs=sldrODMH.value
+End If
+End If
+End If
+End If
+If not(CurUser.bOperator) or chkOpSlots.value=1 then
+if CDbl(iCHubs)>CDbl(iDCPPMaxHubs) then
+If chkMsg(4).value=1 then curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(txtMsg(4).text,"%[hubs]",iDCPPMaxHubs),"%[uh]",iCHubs),"%[enter]",vbCrLf),"%[tab]",vbTab)
+frmHub.DoEventsForMe
+DisUser=CurUser.sName
+If sldrDRK(4).value=0 then curUser.Disconnect()
+If sldrDRK(4).value=1 then curUser.ForceMove txtR(4).text
+If sldrDRK(4).value=2 then curUser.kick()
+Exit Sub
+End If
+End If
+
+
+If not(curUser.bOperator) then
+iDCPPMinSlotsPerHub=txtNSperH.text
+MinSlots=sldrNormalMinSlots.value
+If chkDynMinSlots.value=1 then
+If txtDMSFrom.text>txtDMSTo.text then
+If sTime>txtDMSFrom.text or sTime<txtDMSTo.text then MinSlots=sldrNDMS.value
+else If sTime>txtDMSFrom.text and sTime<txtDMSTo.text then MinSlots=sldrNDMS.value
+End If
+End If
+for i=1 to frmHub.lstOps.listItems.count
+if cstr(user)=cstr(frmHub.lstOps.listItems(i).text) then
+If not txtRUP.text="" then
+If Instr(1,txtRUP.text,"%[d]") then
+CurUser.sMyINFOString="$MyINFO $ALL "+curUser.sName+" "+BeforeFirst(txtRUP.text,"%[d]")+BeforeFirst(AfterFirst(CurUser.sMyINFOString,curUser.sName+" "), "$ $")+AfterFirst(txtRUP.text,"%[d]")+"$ $"+AfterFirst(CurUser.sMyINFOString,"$ $")
+else CurUser.sMyINFOString="$MyINFO $ALL "+curUser.sName+" "+txtADP.text+AfterFirst(CurUser.sMyINFOString,curUser.sName+" ")
+End If
+ColUsers.SendToAll CurUser.sMyINFOString
+End If
+iDCPPMinSlotsPerHub=txtRSperH.text
+MinSlots=sldrRegMinSlots.value
+If chkDynMinSlots.value=1 then
+If txtDMSFrom.text>txtDMSTo.text then
+If sTime>txtDMSFrom.text or sTime<txtDMSTo.text then MinSlots=sldrRDMS.value
+else If sTime>txtDMSFrom.text and sTime<txtDMSTo.text then MinSlots=sldrRDMS.value
+End If
+End If
+End If
+Next
+else If chkOpSlots.value=1 then
+iDCPPMinSlotsPerHub=txtOSperH.text
+MinSlots=sldrOPMinSlots.value
+If chkDynMinSlots.value=1 then
+If txtDMSFrom.text>txtDMSTo.text then
+If sTime>txtDMSFrom.text or sTime<txtDMSTo.text then MinSlots=sldrODMS.value
+else If sTime>txtDMSFrom.text and sTime<txtDMSTo.text then MinSlots=sldrODMS.value
+End If
+End If
+End If
+End If
+If not(CurUser.bOperator) or chkOpSlots.value=1 then
+If iCHubs=0 then iCHubs=0.1
+if (cdbl(sSlots)/iCHubs)<(CDbl(iDCPPMinSlotsPerHub)) or (cdbl(sSlots)<cdbl(MinSlots)) then
+If chkMsg(3).value=1 then curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(Replace(txtMsg(3).text,"%[slt]",MinSlots),"%[sph]",iDCPPMinSlotsPerHub),"%[us]",sSlots),"%[enter]",vbCrLf),"%[tab]",vbTab)
+frmHub.DoEventsForMe
+DisUser=CurUser.sName
+If sldrDRK(3).value=0 then curUser.Disconnect()
+If sldrDRK(3).value=1 then curUser.ForceMove txtR(3).text
+If sldrDRK(3).value=2 then curUser.kick()
+Exit Sub
+End If
+End If
+End If
+
+For x=1 to 6
+sCurData=AfterFirst(sCurData,"$")
+Next
+iTheirSharedBytes=cdbl(BeforeFirst(sCurData,"$"))
+If not(curUser.bOperator) Then
+iMinSharedBytes=1024^sldrNMinShare.value*txtNMinShare.text
+If chkTNEnableDynShare.value=1 then
+If colUsers.Count()<cdbl(txtTNU(0).text) then iMinSharedBytes=1024^sldrNMinShare.value*txtNMinShare.text
+If colUsers.Count()>cdbl(txtTNU(0).text) then iMinSharedBytes=1024^sldrTNDynShare.value*txtTNDS(0).text
+If colUsers.Count()>cdbl(txtTNU(1).text) then iMinSharedBytes=1024^sldrTNDynShare.value*txtTNDS(1).text
+If colUsers.Count()>cdbl(txtTNU(2).text) then iMinSharedBytes=1024^sldrTNDynShare.value*txtTNDS(2).text
+If colUsers.Count()>cdbl(txtTNU(3).text) then iMinSharedBytes=1024^sldrTNDynShare.value*txtTNDS(3).text
+End If
+If chkNEnableDynShare.value=1 then
+If txtN1DynShareFrom.text>txtN1DynShareTo.text then
+If sTime>txtN1DynShareFrom.text or sTime<txtN1DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrNDynShare.value*txtN1DynShare.text)
+else If sTime>txtN1DynShareFrom.text and sTime<txtN1DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrNDynShare.value*txtN1DynShare.text)
+End If
+If txtN2DynShareFrom.text>txtN2DynShareTo.text then
+If sTime>txtN2DynShareFrom.text or sTime<txtN2DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrNDynShare.value*txtN2DynShare.text)
+else If sTime>txtN2DynShareFrom.text and sTime<txtN2DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrNDynShare.value*txtN2DynShare.text)
+End If
+End If
+for i=1 to frmHub.lstOps.listItems.count
+if cstr(CurUser.sName)=cstr(frmHub.lstOps.listItems(i).text) then
+iMinSharedBytes=1024^sldrRMinShare.value*txtRMinShare.text
+If chkTREnableDynShare.value=1 then
+If colUsers.Count()<cdbl(txtTRU(0).text) then iMinSharedBytes=1024^sldrRMinShare.value*txtRMinShare.text
+If colUsers.Count()>cdbl(txtTRU(0).text) then iMinSharedBytes=1024^sldrTRDynShare.value*txtTRDS(0).text
+If colUsers.Count()>cdbl(txtTRU(1).text) then iMinSharedBytes=1024^sldrTRDynShare.value*txtTRDS(1).text
+If colUsers.Count()>cdbl(txtTRU(2).text) then iMinSharedBytes=1024^sldrTRDynShare.value*txtTRDS(2).text
+If colUsers.Count()>cdbl(txtTRU(3).text) then iMinSharedBytes=1024^sldrTRDynShare.value*txtTRDS(3).text
+End If
+If chkREnableDynShare.value=1 then
+If txtR1DynShareFrom.text>txtR1DynShareTo.text then
+If sTime>txtR1DynShareFrom.text or sTime<txtR1DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrRDynShare.value*txtR1DynShare.text)
+else If sTime>txtR1DynShareFrom.text and sTime<txtR1DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrRDynShare.value*txtR1DynShare.text)
+End If
+If txtR2DynShareFrom.text>txtR2DynShareTo.text then
+If sTime>txtR2DynShareFrom.text or sTime<txtR2DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrRDynShare.value*txtR2DynShare.text)
+else If sTime>txtR2DynShareFrom.text and sTime<txtR2DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrRDynShare.value*txtR2DynShare.text)
+End If
+End If
+End If
+Next
+else iMinSharedBytes=1024^sldrOMinShare.value*txtOMinShare.text
+If curUser.sName=txtADN.text then
+If Instr(1,txtADP.text,"%[d]") then
+CurUser.sMyINFOString="$MyINFO $ALL "+curUser.sName+" "+BeforeFirst(txtADP.text,"%[d]")+BeforeFirst(AfterFirst(CurUser.sMyINFOString,curUser.sName+" "),"$ $")+AfterFirst(txtADP.text,"%[d]")+"$ $"+AfterFirst(CurUser.sMyINFOString,"$ $")
+else CurUser.sMyINFOString="$MyINFO $ALL "+curUser.sName+" "+txtADP.text+AfterFirst(CurUser.sMyINFOString,curUser.sName+" ")
+End If
+ColUsers.SendToAll CurUser.sMyINFOString
+else If not txtOPP.text="" then
+If Instr(1,txtOPP.text,"%[d]") then
+CurUser.sMyINFOString="$MyINFO $ALL "+curUser.sName+" "+BeforeFirst(txtOPP.text,"%[d]")+BeforeFirst(AfterFirst(CurUser.sMyINFOString,curUser.sName+" "),"$ $")+AfterFirst(txtOPP.text,"%[d]")+"$ $"+AfterFirst(CurUser.sMyINFOString,"$ $")
+else CurUser.sMyINFOString="$MyINFO $ALL "+curUser.sName+" "+txtOPP.text+AfterFirst(CurUser.sMyINFOString,curUser.sName+" ")
+End If
+ColUsers.SendToAll CurUser.sMyINFOString
+End If
+End If
+End If
+If iTheirSharedBytes<(cdbl(iMinSharedBytes)) Then
+If chkMsg(2).value=1 then curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(txtMsg(2).text,"%[us]",mbOrGb(iTheirSharedBytes)),"%[share]",mbOrGb(iMinSharedBytes)),"%[enter]",vbCrLf),"%[tab]",vbTab)
+frmHub.DoEventsForMe
+DisUser=CurUser.sName
+tmrScriptTimer.Enabled=1
+If sldrDRK(2).value=0 then curUser.Disconnect()
+If sldrDRK(2).value=1 then curUser.ForceMove txtR(2).text
+If sldrDRK(2).value=2 then curUser.kick()
+Exit Sub
+End If
+If chkMaxShare.value=1 then
+If iTheirSharedBytes>(cdbl(1024^sldrMaxShare.value*txtMaxShare.text)) Then
+curUser.SendChatMessage cstr(sBotName),"You are sharing too much! Max: "+mbOrGb(1024^sldrMaxShare.value*txtMaxShare.text)+"."
+frmHub.DoEventsForMe
+DisUser=CurUser.sName
+tmrScriptTimer.Enabled=1
+If sldrDRK(2).value=0 then curUser.Disconnect()
+If sldrDRK(2).value=1 then curUser.ForceMove txtR(2).text
+If sldrDRK(2).value=2 then curUser.kick()
+Exit Sub
+End If
+End If
+If chkMsg(5).value=1 then
+If iCHubs=0.1 then iCHubs=0
+If frmHub.lstSelector.ListItems(9).Selected then txtHS.text=HubShared
+If klient="NMDC" then
+curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(Replace(Replace(txtMsg(5).text,"%[klient]",klient),"%[s]",""),"%[h]",""),"%[share]",mbOrGb(iTheirSharedBytes)),"%[enter]",vbCrLf),"%[tab]",vbTab)
+else zSlots=Replace(txtZmS.text,"%[s]",sSlots)
+If iCHubs<=0 then
+curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(Replace(Replace(txtMsg(5).text,"%[klient]",klient),"%[s]",zSlots),"%[h]",""),"%[share]",mbOrGb(iTheirSharedBytes)),"%[enter]",vbCrLf),"%[tab]",vbTab)
+else sHubs=Replace(Replace(Replace(txtZmH.text,"%[hn]",iCHubs),"%[hr]",sReg),"%[ho]",sOp)
+curUser.SendChatMessage cstr(sBotName),Replace(Replace(Replace(Replace(Replace(Replace(txtMsg(5).text,"%[klient]",klient),"%[s]",zSlots),"%[h]",sHubs),"%[share]",mbOrGb(iTheirSharedBytes)),"%[enter]",vbCrLf),"%[tab]",vbTab)
+End If
+End If
+End If
+If Instr(txtInvisibleUsers.text, ", ") then
+aCom=Split(txtInvisibleUsers.text, ", ")
+For Each sCom In aCom
+if cstr(sCom)="" or cstr(sCom)=" " then
+else If ColUsers.Online(cstr(sCom)) then
+If CurUser.sName=cstr(sCom) then
+zds=txtIUInterval.text
+Do while cdbl(zsd)>0
+frmHub.DoEventsforMe
+Loop
+ColUsers.SendToAll "$Quit "+cstr(sCom)
+End If
+zsd=txtIUInterval.text
+Do while cdbl(zsd)>0
+frmHub.DoEventsforMe
+Loop
+CurUser.SendData "$Quit "+cstr(sCom)
+End If
+End If
+next
+else sCom=txtInvisibleUsers.text
+if cstr(sCom)="" or cstr(sCom)=" " then
+else If ColUsers.Online(cstr(sCom)) then
+If CurUser.sName=cstr(sCom) then
+zds=txtIUInterval.text
+Do while cdbl(zsd)>0
+frmHub.DoEventsforMe
+Loop
+ColUsers.SendToAll "$Quit "+cstr(sCom)
+End If
+zsd=txtIUInterval.text
+Do while cdbl(zsd)>0
+frmHub.DoEventsforMe
+Loop
+CurUser.SendData "$Quit "+cstr(sCom)
+End If
+End If
+End If
+Case "$UserIP"
+CurUser.SendData CStr("$UserIP "+cstr(AfterFirst(sCurData,"$UserIP "))+" "+ColUsers.ItemByName(AfterFirst(sCurData,"$UserIP ")).IP+"|")
+End Select
+End If
+If AfterFirst(sCurData,"> ")=cstr(txtInfo.text) then
+If chkAllowInfo.value=1 then
+Dim iDCPPMaxHubs2,iDCPPMinSlotsPerHub2,MinSlots2,iMinSharedBytes2
+sTime=Replace((FormatDateTime(now(),vbshorttime)),":","")
+iDCPPMaxHubs2=sldrNMaxHubs.value
+If chkDynMaxHubs.value=1 then
+If txtDMHFrom.text>txtDMHTo.text then
+If sTime>txtDMHFrom.text or sTime<txtDMHTo.text then iDCPPMaxHubs2=sldrNDMH.value
+else If sTime>txtDMHFrom.text and sTime<txtDMHTo.text then iDCPPMaxHubs2=sldrNDMH.value
+End If
+for i=1 to frmHub.lstOps.listItems.count
+if cstr(CurUser.sName)=cstr(frmHub.lstOps.listItems(i).text) then
+iDCPPMaxHubs2=sldrRMaxHubs.value
+If chkDynMaxHubs.value=1 then
+If txtDMHFrom.text>txtDMHTo.text then
+If sTime>txtDMHFrom.text or sTime<txtDMHTo.text then iDCPPMaxHubs2=sldrRDMH.value
+else If sTime>txtDMHFrom.text and sTime<txtDMHTo.text then iDCPPMaxHubs2=sldrRDMH.value
+End If
+End If
+End If
+Next
+else If chkOpSlots.value=1 then
+iDCPPMaxHubs2=sldrOMaxHubs.value
+If chkDynMaxHubs.value=1 then
+If txtDMHFrom.text>txtDMHTo.text then
+If sTime>txtDMHFrom.text or sTime<txtDMHTo.text then iDCPPMaxHubs2=sldrODMH.value
+else If sTime>txtDMHFrom.text and sTime<txtDMHTo.text then iDCPPMaxHubs2=sldrODMH.value
+End If
+End If
+else iDCPPMaxHubs2="[N/A]"
+End If
+End If
+curUser.senddata "<"+cstr(sBotName)+"> Max hubs: "+cstr(iDCPPMaxHubs2)+" [DC++]"
+If not(curUser.bOperator) then
+iDCPPMinSlotsPerHub2=txtNSperH.text
+MinSlots2=sldrNormalMinSlots.value
+If chkDynMinSlots.value=1 then
+If txtDMSFrom.text>txtDMSTo.text then
+If sTime>txtDMSFrom.text or sTime<txtDMSTo.text then MinSlots2=sldrNDMS.value
+else If sTime>txtDMSFrom.text and sTime<txtDMSTo.text then MinSlots2=sldrNDMS.value
+End If
+End If
+for i=1 to frmHub.lstOps.listItems.count
+if cstr(user)=cstr(frmHub.lstOps.listItems(i).text) then
+iDCPPMinSlotsPerHub2=txtRSperH.text
+MinSlots2=sldrRegMinSlots.value
+If chkDynMinSlots.value=1 then
+If txtDMSFrom.text>txtDMSTo.text then
+If sTime>txtDMSFrom.text or sTime<txtDMSTo.text then MinSlots2=sldrRDMS.value
+else If sTime>txtDMSFrom.text and sTime<txtDMSTo.text then MinSlots2=sldrRDMS.value
+End If
+End If
+End If
+Next
+else If chkOpSlots.value=1 then
+iDCPPMinSlotsPerHub2=txtOSperH.text
+MinSlots2=sldrOPMinSlots.value
+If chkDynMinSlots.value=1 then
+If txtDMSFrom.text>txtDMSTo.text then
+If sTime>txtDMSFrom.text or sTime<txtDMSTo.text then MinSlots2=sldrODMS.value
+else If sTime>txtDMSFrom.text and sTime<txtDMSTo.text then MinSlots2=sldrODMS.value
+End If
+End If
+else iDCPPMinSlotsPerHub2="[N/A]"
+MinSlots2="[N/A]"
+End If
+End If
+curUser.senddata "<"+cstr(sBotName)+"> Minimum Slots: "+cstr(MinSlots2)
+curUser.senddata "<"+cstr(sBotName)+"> Minimum Slots/Hub: "+cstr(iDCPPMinSlotsPerHub2)+" [DC++]"
+iMinSharedBytes2=1024^sldrNMinShare.value*txtNMinShare.text
+If chkTNEnableDynShare.value=1 then
+If colUsers.Count()<cdbl(txtTNU(0).text) then iMinSharedBytes2=1024^sldrNMinShare.value*txtNMinShare.text
+If colUsers.Count()>cdbl(txtTNU(0).text) then iMinSharedBytes2=1024^sldrTNDynShare.value*txtTNDS(0).text
+If colUsers.Count()>cdbl(txtTNU(1).text) then iMinSharedBytes2=1024^sldrTNDynShare.value*txtTNDS(1).text
+If colUsers.Count()>cdbl(txtTNU(2).text) then iMinSharedBytes2=1024^sldrTNDynShare.value*txtTNDS(2).text
+If colUsers.Count()>cdbl(txtTNU(3).text) then iMinSharedBytes2=1024^sldrTNDynShare.value*txtTNDS(3).text
+End If
+If chkNEnableDynShare.value=1 then
+If txtN1DynShareFrom.text>txtN1DynShareTo.text then
+If sTime>txtN1DynShareFrom.text or sTime<txtN1DynShareTo.text then iMinSharedBytes2=iMinSharedBytes2+(1024^sldrNDynShare.value*txtN1DynShare.text)
+else If sTime>txtN1DynShareFrom.text and sTime<txtN1DynShareTo.text then iMinSharedBytes2=iMinSharedBytes2+(1024^sldrNDynShare.value*txtN1DynShare.text)
+End If
+If txtN2DynShareFrom.text>txtN2DynShareTo.text then
+If sTime>txtN2DynShareFrom.text or sTime<txtN2DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrNDynShare.value*txtN2DynShare.text)
+else If sTime>txtN2DynShareFrom.text and sTime<txtN2DynShareTo.text then iMinSharedBytes=iMinSharedBytes+(1024^sldrNDynShare.value*txtN2DynShare.text)
+End If
+End If
+for i=1 to frmHub.lstOps.listItems.count
+if cstr(CurUser.sName)=cstr(frmHub.lstOps.listItems(i).text) then
+iMinSharedBytes=1024^sldrRMinShare.value*txtRMinShare.text
+If chkTREnableDynShare.value=1 then
+If colUsers.Count()<cdbl(txtTRU(0).text) then iMinSharedBytes2=1024^sldrRMinShare.value*txtRMinShare.text
+If colUsers.Count()>cdbl(txtTRU(0).text) then iMinSharedBytes2=1024^sldrTRDynShare.value*txtTRDS(0).text
+If colUsers.Count()>cdbl(txtTNU(1).text) then iMinSharedBytes2=1024^sldrTRDynShare.value*txtTRDS(1).text
+If colUsers.Count()>cdbl(txtTNU(2).text) then iMinSharedBytes2=1024^sldrTRDynShare.value*txtTRDS(2).text
+If colUsers.Count()>cdbl(txtTNU(3).text) then iMinSharedBytes2=1024^sldrTRDynShare.value*txtTRDS(3).text
+End If
+If chkREnableDynShare.value=1 then
+If txtR1DynShareFrom.text>txtR1DynShareTo.text then
+If sTime>txtR1DynShareFrom.text or sTime<txtR1DynShareTo.text then iMinSharedBytes2=iMinSharedBytes2+(1024^sldrRDynShare.value*txtR1DynShare.text)
+else If sTime>txtR1DynShareFrom.text and sTime<txtR1DynShareTo.text then iMinSharedBytes2=iMinSharedBytes2+(1024^sldrRDynShare.value*txtR1DynShare.text)
+End If
+If txtR2DynShareFrom.text>txtR2DynShareTo.text then
+If sTime>txtR2DynShareFrom.text or sTime<txtR2DynShareTo.text then iMinSharedBytes2=iMinSharedBytes2+(1024^sldrRDynShare.value*txtR2DynShare.text)
+else If sTime>txtR2DynShareFrom.text and sTime<txtR2DynShareTo.text then iMinSharedBytes2=iMinSharedBytes2+(1024^sldrRDynShare.value*txtR2DynShare.text)
+End If
+End If
+End If
+Next
+If CurUser.bOperator then
+curUser.senddata "<"+cstr(sBotName)+"> Minimum Share: "+mbOrGb(1024^sldrOMinShare.value*txtOMinShare.text)
+else curUser.senddata "<"+cstr(sBotName)+"> Minimum Share: "+mbOrGb(iMinSharedBytes2)
+End If
+If chkMaxShare.value=1 then curUser.senddata "<"+cstr(sBotName)+"> Maximum Share: "+mbOrGb(1024^sldrMaxShare.value*txtMaxShare.text)
+End If
+End If
+End Sub
+
+Function BeforeFirst(sIn,sFirst)
+BeforeFirst=Left(sIn,InStr(1,sIn,sFirst)-1)
+End Function
+
+Function AfterFirst(sIn,sFirst)
+AfterFirst=Right(sIn,Len(sIn)-InStr(1,sIn,sFirst)-(Len(sFirst)-1))
+End Function
+
+Function isCommand(sData)
+isCommand=(Left(sData,1)="$")
+End Function
+
+Function AfterLast(sFrom,sAfterLast)
+If InStr(1,sFrom,sAfterLast) Then
+AfterLast=Right(sFrom,Len(sFrom)-InStrRev(sFrom,sAfterLast)-(Len(sAfterLast)-1))
+Else AfterLast=""
+End If
+End Function
+
+Sub CheckIfRegStart
+sraz=""
+sImie=sZaImie
+sNumer=sZaNumer
+If len(sImie)<6 then
+Call Unregistered
+else If InStr(1,sNumer,"-")=0 then
+Call Unregistered
+else For x=1 to Len(sImie)
+sNumer2=255-int(rnd*100)
+If x=1 then
+sNumer2=BeforeFirst(sNumer,"-")
+else sNumer=AfterFirst(sNumer,"-")
+If InStr(1,sNumer,"-")>0 then
+sNumer2=BeforeFirst(sNumer,"-")
+elseIf sraz="" then
+sNumer2=sNumer
+sraz=sNumer
+else sNumer2=255-int(rnd*100)
+End If
+End If
+If not chr(sNumer2)=Left(sImie, 1) or sNumer2="" then
+Call Unregistered
+Exit For
+else sImie=AfterFirst(sImie,Left(sImie,1))
+End If
+next
+If sImie="" and InStr(1,sNumer,"-")=0 then Call Registered
+End If
+End If
+End Sub
+
+Sub Registered
+txtOMinShare.Enabled=1
+sldrOMinShare.Enabled=1
+sldrOPMinSlots.Enabled=1
+sldrOMaxHubs.Enabled=1
+txtOSperH.Enabled=1
+txtMinUpload.Enabled=1
+chkAllHubs.Enabled=1
+txtADN.Enabled=1
+txtADP.Enabled=1
+chkRej.Visible=0
+txtBN.Enabled=1
+txtV.Enabled=1
+txtN2DynShare.Enabled=1
+sldrNDynShare.Enabled=1
+txtR2DynShare.Enabled=1
+sldrRDynShare.Enabled=1
+sldrTRDynShare.Enabled=1
+sldrTNDynShare.Enabled=1
+For j=2 to 3
+txtTNU(j).Enabled=1
+txtTRU(j).Enabled=1
+txtTNDS(j).Enabled=1
+txtTRDS(j).Enabled=1
+next
+chkDynMinSlots.Enabled=1
+chkDynMaxHubs.Enabled=1
+For j=0 to 5
+If not j>1 then
+txtMsg(j).Enabled=1
+sldrDRK(j).Enabled=1
+End If
+chkMsg(j).Enabled=1
+next
+chkAllowInfo.Enabled=1
+chkOpSlots.Enabled=1
+tmrScriptTimer.Enabled=1
+chkRej.Visible=0
+chkAbout.Visible=1
+chkPXDE.Enabled=1
+chkAM.Enabled=1
+sIsReg="REGISTERED TO: "+cstr(sZaImie)
+End Sub
+
+Sub UNregistered
+txtOMinShare.text=20
+txtOMinShare.Enabled=0
+sldrOMinShare.value=2
+sldrOMinShare.Enabled=0
+sldrOPMinSlots.value=2
+sldrOPMinSlots.Enabled=0
+sldrOMaxHubs.value=10
+sldrOMaxHubs.Enabled=0
+chkAllHubs.value=0
+chkAllHubs.Enabled=0
+txtOSperH.text=1
+txtOSperH.Enabled=0
+txtMinUpload.text=99999
+txtMinUpload.Enabled=0
+txtN2DynShare.text=0
+txtN2DynShare.Enabled=0
+sldrNDynShare.value=3
+sldrNDynShare.Enabled=0
+txtR2DynShare.text=0
+txtR2DynShare.Enabled=0
+sldrRDynShare.value=3
+sldrRDynShare.Enabled=0
+sldrTNDynShare.value=3
+sldrTNDynShare.Enabled=0
+For j=2 to 3
+txtTNU(j).Enabled=0
+txtTRU(j).Enabled=0
+txtTNDS(j).Enabled=0
+txtTRDS(j).Enabled=0
+txtTNU(j).text=999
+txtTRU(j).text=999
+txtTNDS(j).text=0
+txtTRDS(j).text=0
+next
+sldrTRDynShare.value=3
+sldrTRDynShare.Enabled=0
+chkDynMinSlots.value=0
+chkDynMinSlots.Enabled=0
+chkDynMaxHubs.value=0
+chkDynMaxHubs.Enabled=0
+txtADN.text="name?"
+txtADP.text="prefix?"
+txtADN.Enabled=0
+txtADP.Enabled=0
+txtV.text=0
+txtV.Enabled=0
+chkRej.Visible=1
+txtBN.Enabled=0
+For j=0 to 5
+If not j>1 then
+txtMsg(j).Enabled=0
+sldrDRK(j).Value=2
+sldrDRK(j).Enabled=0
+End If
+chkMsg(j).Enabled=0
+next
+chkAllowInfo.Enabled=0
+chkAllowInfo.value=0
+chkOpSlots.Enabled=0
+chkOpSlots.value=1
+chkPXDE.Enabled=0
+chkAM.Enabled=0
+chkAM.value=0
+txtBN.text="AMS_v5.71B_UNREGISTERED"
+sIsReg="UNREGISTERED VERSION"
+MsgBox "Unregistered Version of Advanced Minimum Share v5.71 BETA!!! If you want to register, then send an e-mail to mr_krzych00@tlen.pl. Thank you!",,"Unregistered Version"
+End Sub
+
+
+Function mbOrGb(iShare)
+If (iShare<1024 and iShare>=0) or (iShare>-1024 and iShare<0) Then
+mbOrGb=cstr(CCur(iShare))+" B"
+else If (iShare<1024^2 and iShare>=0) or (iShare>-(1024^2) and iShare<0) Then
+mbOrGb=cstr(Round(CCur(iShare/1024),2))+" KB"
+Else If (iShare<1024^3 and iShare>=0) or (iShare>-(1024^3) and iShare<0) Then
+mbOrGb=cstr(Round(CCur(iShare/(1024^2)),2))+" MB"
+Else If (iShare<1024^4 and iShare>=0) or (iShare>-(1024^4) and iShare<0) Then
+mbOrGb=cstr(Round(CCur(iShare/(1024^3)),2))+" GB"
+Else mbOrGb=cstr(Round(CCur(iShare/(1024^4)),2))+" TB"
+End If
+End If
+End If
+End If
+End Function
+
+Function HubShared()
+Dim User,dTotal,i,dTemp,dResult,sSurfix
+For Each User In colUsers
+dTotal=dTotal+(User.iBytesShared/1048576)
+Next
+Do
+i=i+1
+dTemp=1024^i
+dResult=dTotal-dTemp
+Loop until dResult<0
+i=i-1
+Select Case i
+Case 0
+sSurfix="MB"
+Case 1
+sSurfix="GB"
+Case 2
+sSurfix="TB"
+Case 3
+sSurfix="PB"
+Case 4
+sSurfix="EB"
+Case Else
+sSurfix="WOW"
+End Select
+If chkPXDE.value=1 then
+HubShared=sSurfix&":"&Round(dTotal/(1024^i),0)
+If len(AfterFirst(HubShared, sSurfix))=3 then
+HubShared=sSurfix&":0"&Round(dTotal/(1024^i),0)
+elseIf len(AfterFirst(HubShared, sSurfix))=2 then
+HubShared=sSurfix&":00"&Round(dTotal/(1024^i),0)
+End If
+else HubShared=Round(dTotal/(1024^i),2)&" "&sSurfix
+End If
+End Function
+
+
+Function DoTellOps(fromOp,sMsg)
+Dim user
+For Each user In colUsers
+If user.bOperator And Not user.sName=fromOp Then
+user.senddata "<"+cstr(fromOp)+"> "+cstr(sMsg)
+End If
+Next
+End Function
